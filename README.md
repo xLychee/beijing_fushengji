@@ -15,6 +15,8 @@ godot --path .
 ```bash
 godot --path . --headless --script tests/smoke_test.gd
 godot --path . --headless --scene tests/EconomyTest.tscn
+godot --path . --headless --scene tests/ProgressionTest.tscn
+godot --path . --headless --scene tests/UiActionTest.tscn
 ```
 
 ## Structure
