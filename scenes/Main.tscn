@@ -480,14 +480,14 @@ offset_bottom = 8.0
 theme_override_font_sizes/font_size = 14
 text = "北京市地铁示意图"
 
-[node name="MapSlogan" type="Label" parent="LocationPanel"]
+[node name="CityToggleButton" type="Button" parent="LocationPanel"]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 31.0
+offset_left = 37.0
+offset_top = 28.0
 offset_right = 128.0
-offset_bottom = 49.0
+offset_bottom = 53.0
 theme_override_font_sizes/font_size = 15
-text = "我要逛京城"
+text = "我要去外地"
 
 [node name="BossLabel" type="Label" parent="LocationPanel"]
 layout_mode = 0

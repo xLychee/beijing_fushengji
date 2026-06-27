@@ -1,5 +1,7 @@
 extends Node
 
+var failed := false
+
 func _ready() -> void:
 	if not GameRules.has_method("travel_to"):
 		_fail("GameRules.travel_to is missing")
@@ -11,8 +13,17 @@ func _ready() -> void:
 		_fail("GameRules.sell is missing")
 		return
 	_test_travel_advances_day_and_applies_interest()
+	if failed:
+		return
 	_test_buy_and_sell_update_cash_and_inventory()
+	if failed:
+		return
+	_test_selling_flagged_goods_reduces_fame()
+	if failed:
+		return
 	_test_invalid_trades_are_rejected()
+	if failed:
+		return
 	print("Economy test passed")
 	get_tree().quit(0)
 
@@ -46,6 +57,14 @@ func _test_buy_and_sell_update_cash_and_inventory() -> void:
 	_require(GameState.inventory_total() == 1, "sell should decrease inventory total")
 	_require(GameState.inventory["imported_cigarettes"]["quantity"] == 1, "sell should leave remaining quantity")
 
+func _test_selling_flagged_goods_reduces_fame() -> void:
+	GameRules.new_game()
+	GameState.market_prices = {"fake_liquor": 1000}
+	GameState.inventory = {"fake_liquor": {"quantity": 2, "average_price": 900}}
+	var sell_result = GameRules.sell("fake_liquor", 1)
+	_require(sell_result["ok"] == true, "selling flagged goods should succeed")
+	_require(GameState.fame == 90, "selling fake liquor should reduce fame by configured penalty")
+
 func _test_invalid_trades_are_rejected() -> void:
 	GameRules.new_game()
 	GameState.market_prices = {"imported_cigarettes": 100}
@@ -63,5 +82,6 @@ func _require(condition: bool, message: String) -> void:
 		_fail(message)
 
 func _fail(message: String) -> void:
+	failed = true
 	push_error("Economy test failed: %s" % message)
 	get_tree().quit(1)

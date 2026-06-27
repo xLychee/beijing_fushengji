@@ -9,6 +9,12 @@ extends Control
 @onready var message_label: Label = %MessageLabel
 @onready var buy_button: Button = %BuyButton
 @onready var sell_button: Button = %SellButton
+@onready var bank_button: Button = $BankButton
+@onready var hospital_button: Button = $HospitalButton
+@onready var post_button: Button = $PostButton
+@onready var house_button: Button = $HouseButton
+@onready var wangba_button: Button = $WangbaButton
+@onready var city_toggle_button: Button = $LocationPanel/CityToggleButton
 @onready var cash_value: Control = %CashValue
 @onready var bank_value: Control = %BankValue
 @onready var debt_value: Control = %DebtValue
@@ -45,6 +51,12 @@ func _ready() -> void:
 	DialogManager.enqueue_messages(result["messages"])
 	buy_button.pressed.connect(_on_buy_pressed)
 	sell_button.pressed.connect(_on_sell_pressed)
+	bank_button.pressed.connect(_on_bank_pressed)
+	hospital_button.pressed.connect(_on_hospital_pressed)
+	post_button.pressed.connect(_on_post_pressed)
+	house_button.pressed.connect(_on_house_pressed)
+	wangba_button.pressed.connect(_on_wangba_pressed)
+	city_toggle_button.pressed.connect(_on_city_toggle_pressed)
 	_render_all()
 
 func _render_all() -> void:
@@ -55,6 +67,7 @@ func _render_all() -> void:
 	debt_value.set("value", str(GameState.debt))
 	health_value.set("value", str(GameState.health))
 	fame_value.set("value", str(GameState.fame))
+	city_toggle_button.text = "我要逛京城" if GameState.city == "alternate" else "我要去外地"
 	_render_locations()
 	_render_market()
 	_render_inventory()
@@ -172,6 +185,39 @@ func _on_sell_pressed() -> void:
 		return
 	var goods_id := String(selected.get_metadata(0))
 	_apply_rule_result(GameRules.sell(goods_id, 1))
+
+func _on_bank_pressed() -> void:
+	if GameState.cash >= 500:
+		_apply_rule_result(GameRules.deposit(500))
+	elif GameState.bank > 0:
+		_apply_rule_result(GameRules.withdraw(min(500, GameState.bank)))
+	else:
+		_show_message("银行里没有钱，身上也没什么可存的。")
+
+func _on_hospital_pressed() -> void:
+	if GameState.health >= 100:
+		_show_message("俺身体好着呢。")
+		return
+	_apply_rule_result(GameRules.heal(min(10, 100 - GameState.health)))
+
+func _on_post_pressed() -> void:
+	if GameState.debt <= 0:
+		_show_message("俺已经不欠村长钱了。")
+		return
+	var amount: int = min(500, min(GameState.cash, GameState.debt))
+	if amount <= 0:
+		_show_message("俺身上没有现金还债。")
+		return
+	_apply_rule_result(GameRules.repay_debt(amount))
+
+func _on_house_pressed() -> void:
+	_apply_rule_result(GameRules.rent_larger_house())
+
+func _on_wangba_pressed() -> void:
+	_apply_rule_result(GameRules.visit_internet_cafe())
+
+func _on_city_toggle_pressed() -> void:
+	_apply_rule_result(GameRules.toggle_city_mode())
 
 func _apply_rule_result(result: Dictionary) -> void:
 	DialogManager.enqueue_messages(result.get("messages", []))
