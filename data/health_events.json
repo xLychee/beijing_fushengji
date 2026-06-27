@@ -1,0 +1,14 @@
+[
+  {"frequency": 117, "message": "大街上两个流氓打了俺!", "damage": 3, "sound": "kill.wav"},
+  {"frequency": 157, "message": "俺在过街地道被人打了蒙棍! ", "damage": 20, "sound": "death.wav"},
+  {"frequency": 21, "message": "工商局的追俺超过三个胡同。 ", "damage": 1, "sound": "dog.wav"},
+  {"frequency": 100, "message": "北京拥挤的交通让俺心焦! ", "damage": 1, "sound": "harley.wav"},
+  {"frequency": 35, "message": "开小巴的打俺一耳光!", "damage": 1, "sound": "hit.wav"},
+  {"frequency": 313, "message": "一群民工打了俺!", "damage": 10, "sound": "flee.wav"},
+  {"frequency": 120, "message": "附近胡同的一个小青年砸俺一砖头!", "damage": 5, "sound": "death.wav"},
+  {"frequency": 29, "message": "附近写字楼一个假保安用电棍电击俺!", "damage": 3, "sound": "el.wav"},
+  {"frequency": 43, "message": "北京臭黑的小河熏着我了! ", "damage": 1, "sound": "vomit.wav"},
+  {"frequency": 45, "message": "守自行车的王大婶嘲笑俺没北京户口!", "damage": 1, "sound": "level.wav"},
+  {"frequency": 48, "message": "北京高温40度!俺热...", "damage": 1, "sound": "lan.wav"},
+  {"frequency": 33, "message": "申奥添了新风景，北京又来沙尘暴!", "damage": 1, "sound": "breath.wav"}
+]

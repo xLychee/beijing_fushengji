@@ -17,6 +17,7 @@ var market_prices := {}
 var wangba_visits := 0
 var sound_enabled := true
 var hacker_events_enabled := false
+var random_events_enabled := true
 var game_over := false
 
 func reset() -> void:
@@ -35,6 +36,7 @@ func reset() -> void:
 	wangba_visits = 0
 	sound_enabled = true
 	hacker_events_enabled = false
+	random_events_enabled = true
 	game_over = false
 
 func inventory_total() -> int:

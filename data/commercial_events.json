@@ -1,0 +1,111 @@
+[
+  {
+    "frequency": 170,
+    "message": "专家提议提高大学生“动手素质”，进口玩具颇受欢迎!",
+    "goods_id": "imported_toys",
+    "price_multiplier": 2
+  },
+  {
+    "frequency": 139,
+    "message": "有人自豪地说：生病不用打针吃药，喝假白酒（剧毒）就可以!",
+    "goods_id": "fake_liquor",
+    "price_multiplier": 3
+  },
+  {
+    "frequency": 100,
+    "message": "医院的秘密报告：“《上海小宝贝》功效甚过伟哥”!",
+    "goods_id": "shanghai_baby",
+    "price_multiplier": 5
+  },
+  {
+    "frequency": 41,
+    "message": "文盲说：“2000年诺贝尔文学奖？呸！不如盗版VCD港台片。”",
+    "goods_id": "pirated_vcd_games",
+    "price_multiplier": 4
+  },
+  {
+    "frequency": 37,
+    "message": "《北京经济小报》社论：“走私汽车大力推进汽车消费!”",
+    "goods_id": "smuggled_cars",
+    "price_multiplier": 3
+  },
+  {
+    "frequency": 23,
+    "message": "《北京真理报》社论：“提倡爱美，落到实处”，伪劣化妆品大受欢迎!",
+    "goods_id": "shoddy_cosmetics",
+    "price_multiplier": 4
+  },
+  {
+    "frequency": 37,
+    "message": "8858.com电子书店也不敢卖《上海小宝贝》，黑市一册可卖天价!",
+    "goods_id": "shanghai_baby",
+    "price_multiplier": 8
+  },
+  {
+    "frequency": 15,
+    "message": "谢不疯在晚会上说：“我酷!我使用伪劣化妆品!”，伪劣化妆品供不应求!",
+    "goods_id": "shoddy_cosmetics",
+    "price_multiplier": 7
+  },
+  {
+    "frequency": 40,
+    "message": "北京有人狂饮山西假酒，可以卖出天价!",
+    "goods_id": "fake_liquor",
+    "price_multiplier": 7
+  },
+  {
+    "frequency": 29,
+    "message": "北京的大学生们开始找工作，水货手机大受欢迎！!",
+    "goods_id": "gray_market_phones",
+    "price_multiplier": 7
+  },
+  {
+    "frequency": 35,
+    "message": "北京的富人疯狂地购买走私汽车！价格狂升!",
+    "goods_id": "smuggled_cars",
+    "price_multiplier": 8
+  },
+  {
+    "frequency": 17,
+    "message": "市场上充斥着来自福建的走私香烟!",
+    "goods_id": "imported_cigarettes",
+    "price_divisor": 8
+  },
+  {
+    "frequency": 24,
+    "message": "北京的孩子们都忙于上网学习，进口玩具没人愿意买。",
+    "goods_id": "imported_toys",
+    "price_divisor": 5
+  },
+  {
+    "frequency": 18,
+    "message": "盗版业十分兴旺，“中国硅谷”——中关村全是卖盗版VCD的村姑!",
+    "goods_id": "pirated_vcd_games",
+    "price_divisor": 8
+  },
+  {
+    "frequency": 160,
+    "message": "厦门的老同学资助俺两部走私汽车！发了！！",
+    "goods_id": "smuggled_cars",
+    "grant_count": 2
+  },
+  {
+    "frequency": 45,
+    "message": "工商局扫荡后，俺在黑暗角落里发现了老乡丢失的进口香烟。",
+    "goods_id": "imported_cigarettes",
+    "grant_count": 6
+  },
+  {
+    "frequency": 35,
+    "message": "俺老乡回家前把一些山西假白酒（剧毒）给俺!",
+    "goods_id": "fake_liquor",
+    "grant_count": 4
+  },
+  {
+    "frequency": 140,
+    "message": "媒体报道：又有日本出口到中国的产品出事了! 出事后日本人死不认帐，拒绝赔偿。村长得知此消息，托人把他用的水货手机（无任何厂商标识）硬卖给您，收您2500元。",
+    "goods_id": "gray_market_phones",
+    "grant_count": 1,
+    "debt_delta": 2500
+  }
+]

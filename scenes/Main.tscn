@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://beijing_fushengji_main"]
+[gd_scene load_steps=14 format=3 uid="uid://beijing_fushengji_main"]
 
 [ext_resource type="Script" path="res://scripts/ui/MainController.gd" id="1_main_controller"]
 [ext_resource type="Script" path="res://scripts/ui/DigitalNumber.gd" id="2_digital_number"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/ui/post.png" id="5_post"]
 [ext_resource type="Texture2D" path="res://assets/ui/house.png" id="6_house"]
 [ext_resource type="Texture2D" path="res://assets/ui/wangba.png" id="7_wangba"]
+[ext_resource type="Script" path="res://scripts/ui/RetroDialog.gd" id="8_retro_dialog"]
 
 [sub_resource type="StyleBoxFlat" id="outer_panel"]
 bg_color = Color(0.92549, 0.92549, 0.92549, 1)
@@ -107,6 +108,24 @@ offset_right = 170.0
 offset_bottom = 45.0
 theme_override_font_sizes/font_size = 14
 text = "系 统    重要场所    帮 助"
+
+[node name="SettingsButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 27.0
+offset_right = 238.0
+offset_bottom = 46.0
+theme_override_font_sizes/font_size = 12
+text = "设置"
+
+[node name="HighScoresButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 244.0
+offset_top = 27.0
+offset_right = 292.0
+offset_bottom = 46.0
+theme_override_font_sizes/font_size = 12
+text = "排行"
 
 [node name="MarketTitle" type="Label" parent="."]
 layout_mode = 0
@@ -634,3 +653,193 @@ theme_override_font_sizes/font_size = 12
 text = ""
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="MessageDialog" type="Panel" parent="."]
+visible = false
+offset_left = 120.0
+offset_top = 160.0
+offset_right = 480.0
+offset_bottom = 320.0
+theme_override_styles/panel = SubResource("outer_panel")
+script = ExtResource("8_retro_dialog")
+title = "记事本"
+
+[node name="TitleBar" type="Panel" parent="MessageDialog"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("header_panel")
+
+[node name="TitleLabel" type="Label" parent="MessageDialog/TitleBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 14
+text = "记事本"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="MessageDialog/TitleBar"]
+layout_mode = 0
+offset_left = 331.0
+offset_top = 3.0
+offset_right = 353.0
+offset_bottom = 21.0
+theme_override_font_sizes/font_size = 13
+text = "×"
+
+[node name="BodyLabel" type="Label" parent="MessageDialog"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 42.0
+offset_right = -18.0
+offset_bottom = -48.0
+theme_override_font_sizes/font_size = 15
+text = ""
+autowrap_mode = 3
+
+[node name="OkButton" type="Button" parent="MessageDialog"]
+layout_mode = 0
+offset_left = 151.0
+offset_top = 119.0
+offset_right = 209.0
+offset_bottom = 145.0
+theme_override_font_sizes/font_size = 14
+text = "OK"
+
+[node name="SettingsDialog" type="Panel" parent="."]
+visible = false
+offset_left = 160.0
+offset_top = 170.0
+offset_right = 440.0
+offset_bottom = 320.0
+theme_override_styles/panel = SubResource("outer_panel")
+script = ExtResource("8_retro_dialog")
+title = "设置"
+
+[node name="TitleBar" type="Panel" parent="SettingsDialog"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("header_panel")
+
+[node name="TitleLabel" type="Label" parent="SettingsDialog/TitleBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 14
+text = "设置"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="SettingsDialog/TitleBar"]
+layout_mode = 0
+offset_left = 251.0
+offset_top = 3.0
+offset_right = 273.0
+offset_bottom = 21.0
+theme_override_font_sizes/font_size = 13
+text = "×"
+
+[node name="SettingsPanel" type="VBoxContainer" parent="SettingsDialog"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 38.0
+offset_right = 250.0
+offset_bottom = 94.0
+
+[node name="SoundCheck" type="CheckButton" parent="SettingsDialog/SettingsPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "打开声音"
+
+[node name="HackerCheck" type="CheckButton" parent="SettingsDialog/SettingsPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "允许黑客事件"
+
+[node name="OkButton" type="Button" parent="SettingsDialog"]
+layout_mode = 0
+offset_left = 111.0
+offset_top = 111.0
+offset_right = 169.0
+offset_bottom = 137.0
+theme_override_font_sizes/font_size = 14
+text = "OK"
+
+[node name="HighScoresDialog" type="Panel" parent="."]
+visible = false
+offset_left = 120.0
+offset_top = 110.0
+offset_right = 480.0
+offset_bottom = 370.0
+theme_override_styles/panel = SubResource("outer_panel")
+script = ExtResource("8_retro_dialog")
+title = "富人排行榜"
+
+[node name="TitleBar" type="Panel" parent="HighScoresDialog"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 24.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("header_panel")
+
+[node name="TitleLabel" type="Label" parent="HighScoresDialog/TitleBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_right = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 14
+text = "富人排行榜"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="HighScoresDialog/TitleBar"]
+layout_mode = 0
+offset_left = 331.0
+offset_top = 3.0
+offset_right = 353.0
+offset_bottom = 21.0
+theme_override_font_sizes/font_size = 13
+text = "×"
+
+[node name="BodyLabel" type="Label" parent="HighScoresDialog"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 40.0
+offset_right = -16.0
+offset_bottom = -48.0
+theme_override_font_sizes/font_size = 13
+text = ""
+autowrap_mode = 3
+
+[node name="OkButton" type="Button" parent="HighScoresDialog"]
+layout_mode = 0
+offset_left = 151.0
+offset_top = 219.0
+offset_right = 209.0
+offset_bottom = 245.0
+theme_override_font_sizes/font_size = 14
+text = "OK"
