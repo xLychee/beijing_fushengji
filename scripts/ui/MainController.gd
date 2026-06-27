@@ -18,25 +18,26 @@ extends Control
 var locations := {}
 var goods_by_id := {}
 var ui_font := SystemFont.new()
+var goods_icon: Texture2D = preload("res://assets/ui/goods.png")
 var location_positions := {
-	"xizhimen": Vector2(204, 24),
-	"jishuitan": Vector2(310, 24),
-	"dongzhimen": Vector2(418, 24),
-	"pingguoyuan": Vector2(6, 123),
-	"gongzhufen": Vector2(105, 123),
-	"fuxingmen": Vector2(204, 123),
-	"jianguomen": Vector2(416, 123),
-	"changchunjie": Vector2(204, 216),
-	"chongwenmen": Vector2(312, 216),
-	"beijing_station": Vector2(418, 216),
+	"xizhimen": Vector2(145, 21),
+	"jishuitan": Vector2(215, 21),
+	"dongzhimen": Vector2(270, 21),
+	"pingguoyuan": Vector2(6, 97),
+	"gongzhufen": Vector2(88, 97),
+	"fuxingmen": Vector2(174, 97),
+	"jianguomen": Vector2(270, 97),
+	"changchunjie": Vector2(145, 173),
+	"chongwenmen": Vector2(215, 173),
+	"beijing_station": Vector2(270, 173),
 }
 
 func _ready() -> void:
 	randomize()
 	_configure_fonts()
 	_apply_retro_theme(self)
-	_configure_tree(market_list, 214, 92)
-	_configure_tree(inventory_list, 150, 166)
+	_configure_tree(market_list, [134, 70])
+	_configure_tree(inventory_list, [112, 70, 52])
 	locations = _load_json_dictionary("res://data/locations.json")
 	for item in GameRules.load_goods():
 		goods_by_id[String(item["id"])] = item
@@ -70,11 +71,11 @@ func _render_locations() -> void:
 		location_list.set_item_metadata(index, location_id)
 		var button := Button.new()
 		button.text = label
-		button.custom_minimum_size = Vector2(86, 46)
-		button.size = Vector2(86, 46)
-		button.position = location_positions.get(location_id, Vector2(12 + index % 5 * 100, 24 + index / 5 * 92))
+		button.custom_minimum_size = Vector2(54, 28)
+		button.size = Vector2(54, 28)
+		button.position = location_positions.get(location_id, Vector2(10 + index % 5 * 78, 20 + index / 5 * 62))
 		button.add_theme_font_override("font", ui_font)
-		button.add_theme_font_size_override("font_size", 18)
+		button.add_theme_font_size_override("font_size", 13)
 		_style_retro_button(button)
 		button.focus_mode = Control.FOCUS_NONE
 		button.pressed.connect(func() -> void:
@@ -93,6 +94,8 @@ func _render_market() -> void:
 		row.set_text(0, _truncate_goods_name(goods_name))
 		row.set_text(1, str(price))
 		row.set_text_alignment(1, HORIZONTAL_ALIGNMENT_RIGHT)
+		row.set_icon(0, goods_icon)
+		row.set_icon_max_width(0, 16)
 		row.set_metadata(0, goods_id)
 
 func _render_inventory() -> void:
@@ -106,8 +109,12 @@ func _render_inventory() -> void:
 		var item = GameState.inventory[goods_id]
 		var row := inventory_list.create_item(root)
 		row.set_text(0, _truncate_goods_name(goods_name))
-		row.set_text(1, str(int(item.get("quantity", 0))))
+		row.set_text(1, str(int(item.get("average_price", 0))))
+		row.set_text(2, str(int(item.get("quantity", 0))))
 		row.set_text_alignment(1, HORIZONTAL_ALIGNMENT_RIGHT)
+		row.set_text_alignment(2, HORIZONTAL_ALIGNMENT_RIGHT)
+		row.set_icon(0, goods_icon)
+		row.set_icon_max_width(0, 16)
 		row.set_metadata(0, goods_id)
 
 func _render_next_message() -> void:
@@ -175,27 +182,26 @@ func _show_message(message: String) -> void:
 	_render_next_message()
 
 func _truncate_goods_name(goods_name: String) -> String:
-	if goods_name.length() <= 13:
+	if goods_name.length() <= 10:
 		return goods_name
-	return goods_name.substr(0, 12) + "..."
+	return goods_name.substr(0, 9) + "..."
 
 func _configure_fonts() -> void:
 	ui_font.font_names = PackedStringArray(["SimSun", "宋体", "Songti SC", "Microsoft YaHei", "PingFang SC", "Arial Unicode MS"])
 
-func _configure_tree(tree: Tree, first_column_width: int, second_column_width: int) -> void:
-	tree.columns = 2
+func _configure_tree(tree: Tree, column_widths: Array) -> void:
+	tree.columns = column_widths.size()
 	tree.hide_root = true
 	tree.column_titles_visible = false
-	tree.set_column_expand(0, false)
-	tree.set_column_expand(1, false)
-	tree.set_column_custom_minimum_width(0, first_column_width)
-	tree.set_column_custom_minimum_width(1, second_column_width)
+	for column in column_widths.size():
+		tree.set_column_expand(column, false)
+		tree.set_column_custom_minimum_width(column, int(column_widths[column]))
 	tree.add_theme_font_override("font", ui_font)
-	tree.add_theme_font_size_override("font_size", 17)
+	tree.add_theme_font_size_override("font_size", 14)
 	tree.add_theme_color_override("font_color", Color.BLACK)
 	tree.add_theme_color_override("font_selected_color", Color.WHITE)
 	tree.add_theme_color_override("guide_color", Color(0.84, 0.84, 0.84))
-	tree.add_theme_constant_override("v_separation", 1)
+	tree.add_theme_constant_override("v_separation", 0)
 
 func _apply_retro_theme(node: Node) -> void:
 	if node is Label:
