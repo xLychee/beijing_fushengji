@@ -4,7 +4,7 @@
 
 **Goal:** Create the first Godot 4 project skeleton for the Beijing Fushengji remake so it opens in Godot, runs a main scene, loads starter data, and exposes clean singleton boundaries for later gameplay work.
 
-**Architecture:** The original VC6/MFC project remains untouched at the repository root. The remake lives under `godot/`, with Godot autoload singletons for state, rules, dialogs, saves, and audio. The first scene shows initial state and starter data so the project is immediately testable on macOS.
+**Architecture:** The repository root is the Godot project. The original VC6/MFC project lives under `reference/original-vc6/`, with Godot autoload singletons for state, rules, dialogs, saves, and audio at the root. The first scene shows initial state and starter data so the project is immediately testable on macOS.
 
 **Tech Stack:** Godot 4.7, GDScript, JSON data files, Godot Control UI.
 
@@ -12,29 +12,29 @@
 
 ## File Structure
 
-- Create `godot/project.godot`: Godot project config, app metadata, main scene, and autoload registrations.
-- Create `godot/icon.svg`: simple project icon referenced by `project.godot`.
-- Create `godot/scenes/Main.tscn`: minimal Control scene with status labels, location list, market list, inventory list, and action buttons.
-- Create `godot/scripts/autoload/GameState.gd`: mutable game state and reset/derived helpers.
-- Create `godot/scripts/autoload/GameRules.gd`: starter rule entrypoints; initial version only resets and generates starter market prices.
-- Create `godot/scripts/autoload/DialogManager.gd`: message queue stub for future modal dialogs.
-- Create `godot/scripts/autoload/SaveManager.gd`: local user-data paths and starter high-score/settings helpers.
-- Create `godot/scripts/autoload/AudioManager.gd`: sound toggle stub for future WAV playback.
-- Create `godot/scripts/ui/MainController.gd`: main-scene controller that reads autoloads and populates labels/lists.
-- Create `godot/data/goods.json`: migrated starter goods with original names and price ranges.
-- Create `godot/data/locations.json`: starter Beijing and alternate location data.
-- Create `godot/data/text.json`: starter UI strings.
-- Create `godot/tests/smoke_test.gd`: command-line smoke test that verifies autoload scripts can instantiate and starter data parses.
+- Create `project.godot`: Godot project config, app metadata, main scene, and autoload registrations.
+- Create `icon.svg`: simple project icon referenced by `project.godot`.
+- Create `scenes/Main.tscn`: minimal Control scene with status labels, location list, market list, inventory list, and action buttons.
+- Create `scripts/autoload/GameState.gd`: mutable game state and reset/derived helpers.
+- Create `scripts/autoload/GameRules.gd`: starter rule entrypoints; initial version only resets and generates starter market prices.
+- Create `scripts/autoload/DialogManager.gd`: message queue stub for future modal dialogs.
+- Create `scripts/autoload/SaveManager.gd`: local user-data paths and starter high-score/settings helpers.
+- Create `scripts/autoload/AudioManager.gd`: sound toggle stub for future WAV playback.
+- Create `scripts/ui/MainController.gd`: main-scene controller that reads autoloads and populates labels/lists.
+- Create `data/goods.json`: migrated starter goods with original names and price ranges.
+- Create `data/locations.json`: starter Beijing and alternate location data.
+- Create `data/text.json`: starter UI strings.
+- Create `tests/smoke_test.gd`: command-line smoke test that verifies autoload scripts can instantiate and starter data parses.
 
 ## Task 1: Create Godot Project Config
 
 **Files:**
-- Create: `godot/project.godot`
-- Create: `godot/icon.svg`
+- Create: `project.godot`
+- Create: `icon.svg`
 
 - [ ] **Step 1: Write the project config**
 
-Create `godot/project.godot`:
+Create `project.godot`:
 
 ```ini
 ; Engine configuration file.
@@ -72,7 +72,7 @@ renderer/rendering_method="mobile"
 
 - [ ] **Step 2: Write the temporary project icon**
 
-Create `godot/icon.svg`:
+Create `icon.svg`:
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
@@ -88,7 +88,7 @@ Create `godot/icon.svg`:
 Run:
 
 ```bash
-godot --path godot --headless --quit
+godot --path . --headless --quit
 ```
 
 Expected: Godot starts without a project parse error. It may warn that the main scene does not exist until Task 5 is complete.
@@ -96,13 +96,13 @@ Expected: Godot starts without a project parse error. It may warn that the main 
 ## Task 2: Add Starter Data
 
 **Files:**
-- Create: `godot/data/goods.json`
-- Create: `godot/data/locations.json`
-- Create: `godot/data/text.json`
+- Create: `data/goods.json`
+- Create: `data/locations.json`
+- Create: `data/text.json`
 
 - [ ] **Step 1: Write goods data**
 
-Create `godot/data/goods.json`:
+Create `data/goods.json`:
 
 ```json
 [
@@ -119,7 +119,7 @@ Create `godot/data/goods.json`:
 
 - [ ] **Step 2: Write location data**
 
-Create `godot/data/locations.json`:
+Create `data/locations.json`:
 
 ```json
 {
@@ -152,7 +152,7 @@ Create `godot/data/locations.json`:
 
 - [ ] **Step 3: Write UI text data**
 
-Create `godot/data/text.json`:
+Create `data/text.json`:
 
 ```json
 {
@@ -170,9 +170,9 @@ Create `godot/data/text.json`:
 Run:
 
 ```bash
-python3 -m json.tool godot/data/goods.json >/dev/null
-python3 -m json.tool godot/data/locations.json >/dev/null
-python3 -m json.tool godot/data/text.json >/dev/null
+python3 -m json.tool data/goods.json >/dev/null
+python3 -m json.tool data/locations.json >/dev/null
+python3 -m json.tool data/text.json >/dev/null
 ```
 
 Expected: all commands exit with status 0 and no output.
@@ -180,11 +180,11 @@ Expected: all commands exit with status 0 and no output.
 ## Task 3: Create Autoload Singletons
 
 **Files:**
-- Create: `godot/scripts/autoload/GameState.gd`
-- Create: `godot/scripts/autoload/GameRules.gd`
-- Create: `godot/scripts/autoload/DialogManager.gd`
-- Create: `godot/scripts/autoload/SaveManager.gd`
-- Create: `godot/scripts/autoload/AudioManager.gd`
+- Create: `scripts/autoload/GameState.gd`
+- Create: `scripts/autoload/GameRules.gd`
+- Create: `scripts/autoload/DialogManager.gd`
+- Create: `scripts/autoload/SaveManager.gd`
+- Create: `scripts/autoload/AudioManager.gd`
 
 - [ ] **Step 1: Write `GameState.gd`**
 
@@ -349,11 +349,11 @@ func play_sound(sound_name: String) -> void:
 Run:
 
 ```bash
-godot --path godot --headless --check-only --script scripts/autoload/GameState.gd
-godot --path godot --headless --check-only --script scripts/autoload/GameRules.gd
-godot --path godot --headless --check-only --script scripts/autoload/DialogManager.gd
-godot --path godot --headless --check-only --script scripts/autoload/SaveManager.gd
-godot --path godot --headless --check-only --script scripts/autoload/AudioManager.gd
+godot --path . --headless --check-only --script scripts/autoload/GameState.gd
+godot --path . --headless --check-only --script scripts/autoload/GameRules.gd
+godot --path . --headless --check-only --script scripts/autoload/DialogManager.gd
+godot --path . --headless --check-only --script scripts/autoload/SaveManager.gd
+godot --path . --headless --check-only --script scripts/autoload/AudioManager.gd
 ```
 
 Expected: each command exits with status 0.
@@ -361,7 +361,7 @@ Expected: each command exits with status 0.
 ## Task 4: Create Main Controller
 
 **Files:**
-- Create: `godot/scripts/ui/MainController.gd`
+- Create: `scripts/ui/MainController.gd`
 
 - [ ] **Step 1: Write `MainController.gd`**
 
@@ -452,7 +452,7 @@ func _load_json_dictionary(path: String) -> Dictionary:
 Run:
 
 ```bash
-godot --path godot --headless --check-only --script scripts/ui/MainController.gd
+godot --path . --headless --check-only --script scripts/ui/MainController.gd
 ```
 
 Expected: exits with status 0.
@@ -460,7 +460,7 @@ Expected: exits with status 0.
 ## Task 5: Create Main Scene
 
 **Files:**
-- Create: `godot/scenes/Main.tscn`
+- Create: `scenes/Main.tscn`
 
 - [ ] **Step 1: Write `Main.tscn`**
 
@@ -589,7 +589,7 @@ autowrap_mode = 3
 Run:
 
 ```bash
-godot --path godot --headless --quit
+godot --path . --headless --quit
 ```
 
 Expected: exits with status 0 and no missing main scene errors.
@@ -597,7 +597,7 @@ Expected: exits with status 0 and no missing main scene errors.
 ## Task 6: Add Smoke Test
 
 **Files:**
-- Create: `godot/tests/smoke_test.gd`
+- Create: `tests/smoke_test.gd`
 
 - [ ] **Step 1: Write `smoke_test.gd`**
 
@@ -627,7 +627,7 @@ func _init() -> void:
 Run:
 
 ```bash
-godot --path godot --headless --script tests/smoke_test.gd
+godot --path . --headless --script tests/smoke_test.gd
 ```
 
 Expected output contains:
@@ -651,18 +651,18 @@ Run:
 git status --short
 ```
 
-Expected: only `godot/` and `docs/superpowers/plans/2026-06-27-godot-skeleton.md` are new or modified.
+Expected: only the root Godot project files, `reference/original-vc6/`, and `docs/superpowers/plans/2026-06-27-godot-skeleton.md` are new or modified.
 
 - [ ] **Step 2: Run final verification**
 
 Run:
 
 ```bash
-python3 -m json.tool godot/data/goods.json >/dev/null
-python3 -m json.tool godot/data/locations.json >/dev/null
-python3 -m json.tool godot/data/text.json >/dev/null
-godot --path godot --headless --quit
-godot --path godot --headless --script tests/smoke_test.gd
+python3 -m json.tool data/goods.json >/dev/null
+python3 -m json.tool data/locations.json >/dev/null
+python3 -m json.tool data/text.json >/dev/null
+godot --path . --headless --quit
+godot --path . --headless --script tests/smoke_test.gd
 ```
 
 Expected: JSON commands produce no output, Godot exits successfully, smoke test prints `Smoke test passed`.
