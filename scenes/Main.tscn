@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://beijing_fushengji_main"]
+[gd_scene load_steps=7 format=3 uid="uid://beijing_fushengji_main"]
 
 [ext_resource type="Script" path="res://scripts/ui/MainController.gd" id="1_main_controller"]
+[ext_resource type="Script" path="res://scripts/ui/DigitalNumber.gd" id="2_digital_number"]
 
 [sub_resource type="StyleBoxFlat" id="outer_panel"]
 bg_color = Color(0.92549, 0.92549, 0.92549, 1)
@@ -141,7 +142,7 @@ offset_bottom = 151.0
 theme_override_font_sizes/font_size = 18
 text = "黑市价格"
 
-[node name="MarketList" type="ItemList" parent="."]
+[node name="MarketList" type="Tree" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 49.0
@@ -152,6 +153,10 @@ theme_override_styles/panel = SubResource("table_panel")
 theme_override_colors/font_color = Color(0.0, 0.0, 0.0, 1)
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 17
+hide_folding = true
+hide_root = true
+column_titles_visible = false
+columns = 2
 
 [node name="MarketScrollLine" type="ColorRect" parent="."]
 layout_mode = 0
@@ -205,7 +210,7 @@ offset_bottom = 151.0
 theme_override_font_sizes/font_size = 18
 text = "买进价格 0/100"
 
-[node name="InventoryList" type="ItemList" parent="."]
+[node name="InventoryList" type="Tree" parent="."]
 unique_name_in_owner = true
 layout_mode = 0
 offset_left = 553.0
@@ -216,6 +221,10 @@ theme_override_styles/panel = SubResource("table_panel")
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_selected_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 17
+hide_folding = true
+hide_root = true
+column_titles_visible = false
+columns = 2
 
 [node name="InventoryScrollLine" type="ColorRect" parent="."]
 layout_mode = 0
@@ -298,7 +307,7 @@ offset_right = 340.0
 offset_bottom = 62.0
 theme_override_styles/panel = SubResource("screen_panel")
 
-[node name="CashValue" type="Label" parent="StatusPanel/CashScreen"]
+[node name="CashValue" type="Control" parent="StatusPanel/CashScreen"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -306,11 +315,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.0, 1.0, 0.05, 1)
-theme_override_font_sizes/font_size = 43
-text = "2000"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 8.0
+offset_top = 2.0
+offset_right = -8.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "2000"
 
 [node name="BankName" type="Label" parent="StatusPanel"]
 layout_mode = 0
@@ -329,7 +339,7 @@ offset_right = 340.0
 offset_bottom = 128.0
 theme_override_styles/panel = SubResource("screen_panel")
 
-[node name="BankValue" type="Label" parent="StatusPanel/BankScreen"]
+[node name="BankValue" type="Control" parent="StatusPanel/BankScreen"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -337,11 +347,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.0, 1.0, 0.05, 1)
-theme_override_font_sizes/font_size = 43
-text = "0"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 8.0
+offset_top = 2.0
+offset_right = -8.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "0"
 
 [node name="DebtName" type="Label" parent="StatusPanel"]
 layout_mode = 0
@@ -360,7 +371,7 @@ offset_right = 340.0
 offset_bottom = 196.0
 theme_override_styles/panel = SubResource("screen_panel")
 
-[node name="DebtValue" type="Label" parent="StatusPanel/DebtScreen"]
+[node name="DebtValue" type="Control" parent="StatusPanel/DebtScreen"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -368,11 +379,14 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(1.0, 0.0, 0.0, 1)
-theme_override_font_sizes/font_size = 43
-text = "5500"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 8.0
+offset_top = 2.0
+offset_right = -8.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "5500"
+segment_color = Color(1, 0, 0, 1)
+off_color = Color(0.22, 0, 0, 1)
 
 [node name="HealthName" type="Label" parent="StatusPanel"]
 layout_mode = 0
@@ -391,7 +405,7 @@ offset_right = 194.0
 offset_bottom = 260.0
 theme_override_styles/panel = SubResource("screen_panel")
 
-[node name="HealthValue" type="Label" parent="StatusPanel/HealthScreen"]
+[node name="HealthValue" type="Control" parent="StatusPanel/HealthScreen"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -399,11 +413,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 1, 0.05, 1)
-theme_override_font_sizes/font_size = 40
-text = "100"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 7.0
+offset_top = 3.0
+offset_right = -7.0
+offset_bottom = -3.0
+script = ExtResource("2_digital_number")
+value = "100"
 
 [node name="FameName" type="Label" parent="StatusPanel"]
 layout_mode = 0
@@ -422,7 +437,7 @@ offset_right = 340.0
 offset_bottom = 260.0
 theme_override_styles/panel = SubResource("screen_panel")
 
-[node name="FameValue" type="Label" parent="StatusPanel/FameScreen"]
+[node name="FameValue" type="Control" parent="StatusPanel/FameScreen"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -430,11 +445,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0, 1, 0.05, 1)
-theme_override_font_sizes/font_size = 40
-text = "100"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 6.0
+offset_top = 3.0
+offset_right = -6.0
+offset_bottom = -3.0
+script = ExtResource("2_digital_number")
+value = "100"
 
 [node name="LocationPanel" type="Panel" parent="."]
 layout_mode = 0

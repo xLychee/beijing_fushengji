@@ -4,19 +4,20 @@ extends Control
 @onready var status_label: Label = %StatusLabel
 @onready var location_list: ItemList = %LocationList
 @onready var location_grid: Control = $LocationPanel/LocationGrid
-@onready var market_list: ItemList = %MarketList
-@onready var inventory_list: ItemList = %InventoryList
+@onready var market_list: Tree = %MarketList
+@onready var inventory_list: Tree = %InventoryList
 @onready var message_label: Label = %MessageLabel
 @onready var buy_button: Button = %BuyButton
 @onready var sell_button: Button = %SellButton
-@onready var cash_value: Label = %CashValue
-@onready var bank_value: Label = %BankValue
-@onready var debt_value: Label = %DebtValue
-@onready var health_value: Label = %HealthValue
-@onready var fame_value: Label = %FameValue
+@onready var cash_value: Control = %CashValue
+@onready var bank_value: Control = %BankValue
+@onready var debt_value: Control = %DebtValue
+@onready var health_value: Control = %HealthValue
+@onready var fame_value: Control = %FameValue
 
 var locations := {}
 var goods_by_id := {}
+var ui_font := SystemFont.new()
 var location_positions := {
 	"xizhimen": Vector2(204, 24),
 	"jishuitan": Vector2(310, 24),
@@ -32,7 +33,10 @@ var location_positions := {
 
 func _ready() -> void:
 	randomize()
+	_configure_fonts()
 	_apply_retro_theme(self)
+	_configure_tree(market_list, 214, 92)
+	_configure_tree(inventory_list, 150, 166)
 	locations = _load_json_dictionary("res://data/locations.json")
 	for item in GameRules.load_goods():
 		goods_by_id[String(item["id"])] = item
@@ -45,11 +49,11 @@ func _ready() -> void:
 func _render_all() -> void:
 	title_label.text = "北京浮生(%d/40天)" % GameState.day
 	status_label.text = "您的状态"
-	cash_value.text = str(GameState.cash)
-	bank_value.text = str(GameState.bank)
-	debt_value.text = str(GameState.debt)
-	health_value.text = str(GameState.health)
-	fame_value.text = str(GameState.fame)
+	cash_value.set("value", str(GameState.cash))
+	bank_value.set("value", str(GameState.bank))
+	debt_value.set("value", str(GameState.debt))
+	health_value.set("value", str(GameState.health))
+	fame_value.set("value", str(GameState.fame))
 	_render_locations()
 	_render_market()
 	_render_inventory()
@@ -69,6 +73,7 @@ func _render_locations() -> void:
 		button.custom_minimum_size = Vector2(86, 46)
 		button.size = Vector2(86, 46)
 		button.position = location_positions.get(location_id, Vector2(12 + index % 5 * 100, 24 + index / 5 * 92))
+		button.add_theme_font_override("font", ui_font)
 		button.add_theme_font_size_override("font_size", 18)
 		_style_retro_button(button)
 		button.focus_mode = Control.FOCUS_NONE
@@ -79,24 +84,31 @@ func _render_locations() -> void:
 
 func _render_market() -> void:
 	market_list.clear()
+	var root := market_list.create_item()
 	for goods_id in GameState.market_prices.keys():
 		var goods = goods_by_id.get(goods_id, {})
 		var goods_name := String(goods.get("name", goods_id))
 		var price := int(GameState.market_prices[goods_id])
-		var index := market_list.add_item("%-18s %7d" % [_truncate_goods_name(goods_name), price])
-		market_list.set_item_metadata(index, goods_id)
+		var row := market_list.create_item(root)
+		row.set_text(0, _truncate_goods_name(goods_name))
+		row.set_text(1, str(price))
+		row.set_text_alignment(1, HORIZONTAL_ALIGNMENT_RIGHT)
+		row.set_metadata(0, goods_id)
 
 func _render_inventory() -> void:
 	inventory_list.clear()
+	var root := inventory_list.create_item()
 	if GameState.inventory.is_empty():
-		inventory_list.add_item("")
 		return
 	for goods_id in GameState.inventory.keys():
 		var goods = goods_by_id.get(goods_id, {})
 		var goods_name := String(goods.get("name", goods_id))
 		var item = GameState.inventory[goods_id]
-		var index := inventory_list.add_item("%-18s %7d" % [_truncate_goods_name(goods_name), int(item.get("quantity", 0))])
-		inventory_list.set_item_metadata(index, goods_id)
+		var row := inventory_list.create_item(root)
+		row.set_text(0, _truncate_goods_name(goods_name))
+		row.set_text(1, str(int(item.get("quantity", 0))))
+		row.set_text_alignment(1, HORIZONTAL_ALIGNMENT_RIGHT)
+		row.set_metadata(0, goods_id)
 
 func _render_next_message() -> void:
 	if DialogManager.has_messages():
@@ -139,19 +151,19 @@ func _on_location_pressed(location_id: String) -> void:
 	_apply_rule_result(GameRules.travel_to(location_id))
 
 func _on_buy_pressed() -> void:
-	var selected := market_list.get_selected_items()
-	if selected.is_empty():
+	var selected := market_list.get_selected()
+	if selected == null:
 		_show_message("先选一个想买的货。")
 		return
-	var goods_id := String(market_list.get_item_metadata(selected[0]))
+	var goods_id := String(selected.get_metadata(0))
 	_apply_rule_result(GameRules.buy(goods_id, 1))
 
 func _on_sell_pressed() -> void:
-	var selected := inventory_list.get_selected_items()
-	if selected.is_empty():
+	var selected := inventory_list.get_selected()
+	if selected == null:
 		_show_message("先选一个想卖的货。")
 		return
-	var goods_id := String(inventory_list.get_item_metadata(selected[0]))
+	var goods_id := String(selected.get_metadata(0))
 	_apply_rule_result(GameRules.sell(goods_id, 1))
 
 func _apply_rule_result(result: Dictionary) -> void:
@@ -163,14 +175,33 @@ func _show_message(message: String) -> void:
 	_render_next_message()
 
 func _truncate_goods_name(goods_name: String) -> String:
-	if goods_name.length() <= 12:
+	if goods_name.length() <= 13:
 		return goods_name
-	return goods_name.substr(0, 11) + "..."
+	return goods_name.substr(0, 12) + "..."
+
+func _configure_fonts() -> void:
+	ui_font.font_names = PackedStringArray(["SimSun", "宋体", "Songti SC", "Microsoft YaHei", "PingFang SC", "Arial Unicode MS"])
+
+func _configure_tree(tree: Tree, first_column_width: int, second_column_width: int) -> void:
+	tree.columns = 2
+	tree.hide_root = true
+	tree.column_titles_visible = false
+	tree.set_column_expand(0, false)
+	tree.set_column_expand(1, false)
+	tree.set_column_custom_minimum_width(0, first_column_width)
+	tree.set_column_custom_minimum_width(1, second_column_width)
+	tree.add_theme_font_override("font", ui_font)
+	tree.add_theme_font_size_override("font_size", 17)
+	tree.add_theme_color_override("font_color", Color.BLACK)
+	tree.add_theme_color_override("font_selected_color", Color.WHITE)
+	tree.add_theme_color_override("guide_color", Color(0.84, 0.84, 0.84))
+	tree.add_theme_constant_override("v_separation", 1)
 
 func _apply_retro_theme(node: Node) -> void:
 	if node is Label:
 		var label := node as Label
-		if not _is_status_number(label) and label != message_label:
+		label.add_theme_font_override("font", ui_font)
+		if label != message_label:
 			label.add_theme_color_override("font_color", Color.BLACK)
 	if node is Button:
 		_style_retro_button(node as Button)
@@ -178,6 +209,7 @@ func _apply_retro_theme(node: Node) -> void:
 		_apply_retro_theme(child)
 
 func _style_retro_button(button: Button) -> void:
+	button.add_theme_font_override("font", ui_font)
 	button.add_theme_color_override("font_color", Color.BLACK)
 	button.add_theme_color_override("font_pressed_color", Color.BLACK)
 	button.add_theme_color_override("font_hover_color", Color.BLACK)
@@ -200,6 +232,3 @@ func _make_button_style(fill: Color, border: Color) -> StyleBoxFlat:
 	style.corner_radius_bottom_right = 0
 	style.corner_radius_bottom_left = 0
 	return style
-
-func _is_status_number(label: Label) -> bool:
-	return label == cash_value or label == bank_value or label == debt_value or label == health_value or label == fame_value
