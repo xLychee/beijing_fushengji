@@ -1,6 +1,67 @@
-[gd_scene load_steps=2 format=3 uid="uid://beijing_fushengji_main"]
+[gd_scene load_steps=13 format=3 uid="uid://beijing_fushengji_main"]
 
 [ext_resource type="Script" path="res://scripts/ui/MainController.gd" id="1_main_controller"]
+[ext_resource type="Script" path="res://scripts/ui/DigitalNumber.gd" id="2_digital_number"]
+[ext_resource type="Texture2D" path="res://assets/ui/bank.png" id="3_bank"]
+[ext_resource type="Texture2D" path="res://assets/ui/hospital.png" id="4_hospital"]
+[ext_resource type="Texture2D" path="res://assets/ui/post.png" id="5_post"]
+[ext_resource type="Texture2D" path="res://assets/ui/house.png" id="6_house"]
+[ext_resource type="Texture2D" path="res://assets/ui/wangba.png" id="7_wangba"]
+
+[sub_resource type="StyleBoxFlat" id="outer_panel"]
+bg_color = Color(0.92549, 0.92549, 0.92549, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.62, 0.62, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="StyleBoxFlat" id="table_panel"]
+bg_color = Color(0.985, 0.985, 0.985, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.42, 0.42, 0.42, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="StyleBoxFlat" id="header_panel"]
+bg_color = Color(0.91, 0.91, 0.91, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.55, 0.55, 0.55, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="StyleBoxFlat" id="screen_panel"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
+
+[sub_resource type="StyleBoxFlat" id="button_panel"]
+bg_color = Color(0.88, 0.88, 0.88, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.62, 0.62, 0.62, 1)
+corner_radius_top_left = 0
+corner_radius_top_right = 0
+corner_radius_bottom_right = 0
+corner_radius_bottom_left = 0
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -11,107 +72,565 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_main_controller")
 
-[node name="RootMargin" type="MarginContainer" parent="."]
+[node name="Desktop" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 18
+color = Color(0.92549, 0.92549, 0.92549, 1)
 
-[node name="RootVBox" type="VBoxContainer" parent="RootMargin"]
-layout_mode = 2
-theme_override_constants/separation = 12
+[node name="TopBevel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 598.0
+offset_bottom = 48.0
+theme_override_styles/panel = SubResource("header_panel")
 
-[node name="TitleLabel" type="Label" parent="RootMargin/RootVBox"]
+[node name="TitleLabel" type="Label" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-text = "北京浮生记"
-horizontal_alignment = 1
+layout_mode = 0
+offset_left = 10.0
+offset_top = 6.0
+offset_right = 180.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 16
+text = "北京浮生(0/40天)"
 
-[node name="StatusLabel" type="Label" parent="RootMargin/RootVBox"]
+[node name="MenuLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 29.0
+offset_right = 170.0
+offset_bottom = 45.0
+theme_override_font_sizes/font_size = 14
+text = "系 统    重要场所    帮 助"
+
+[node name="MarketTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 105.0
+offset_top = 62.0
+offset_right = 153.0
+offset_bottom = 81.0
+theme_override_font_sizes/font_size = 16
+text = "黑  市"
+
+[node name="MarketFrame" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 84.0
+offset_right = 241.0
+offset_bottom = 229.0
+theme_override_styles/panel = SubResource("table_panel")
+
+[node name="MarketHeader" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 85.0
+offset_right = 240.0
+offset_bottom = 101.0
+theme_override_styles/panel = SubResource("header_panel")
+
+[node name="MarketHeaderGoods" type="Label" parent="."]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 86.0
+offset_right = 90.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 14
+text = "商品"
+
+[node name="MarketHeaderPrice" type="Label" parent="."]
+layout_mode = 0
+offset_left = 176.0
+offset_top = 86.0
+offset_right = 237.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 14
+text = "黑市价格"
+
+[node name="MarketList" type="Tree" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-text = "状态"
+layout_mode = 0
+offset_left = 36.0
+offset_top = 103.0
+offset_right = 239.0
+offset_bottom = 215.0
+theme_override_styles/panel = SubResource("table_panel")
+hide_folding = true
+hide_root = true
+column_titles_visible = false
+columns = 2
 
-[node name="ContentHBox" type="HBoxContainer" parent="RootMargin/RootVBox"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 12
+[node name="MarketScrollLine" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 69.0
+offset_top = 218.0
+offset_right = 198.0
+offset_bottom = 221.0
+color = Color(0.55, 0.55, 0.55, 1)
 
-[node name="LocationPanel" type="VBoxContainer" parent="RootMargin/RootVBox/ContentHBox"]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="InventoryTitle" type="Label" parent="."]
+layout_mode = 0
+offset_left = 416.0
+offset_top = 62.0
+offset_right = 500.0
+offset_bottom = 81.0
+theme_override_font_sizes/font_size = 16
+text = "您的出租屋"
 
-[node name="LocationTitle" type="Label" parent="RootMargin/RootVBox/ContentHBox/LocationPanel"]
-layout_mode = 2
-text = "地点"
+[node name="InventoryFrame" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 352.0
+offset_top = 84.0
+offset_right = 562.0
+offset_bottom = 229.0
+theme_override_styles/panel = SubResource("table_panel")
 
-[node name="LocationList" type="ItemList" parent="RootMargin/RootVBox/ContentHBox/LocationPanel"]
+[node name="InventoryHeader" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 353.0
+offset_top = 85.0
+offset_right = 561.0
+offset_bottom = 101.0
+theme_override_styles/panel = SubResource("header_panel")
+
+[node name="InventoryHeaderGoods" type="Label" parent="."]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 86.0
+offset_right = 410.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 14
+text = "商品"
+
+[node name="InventoryHeaderPrice" type="Label" parent="."]
+layout_mode = 0
+offset_left = 467.0
+offset_top = 86.0
+offset_right = 525.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 14
+text = "买进价格"
+
+[node name="InventoryHeaderCount" type="Label" parent="."]
+layout_mode = 0
+offset_left = 530.0
+offset_top = 86.0
+offset_right = 560.0
+offset_bottom = 102.0
+theme_override_font_sizes/font_size = 14
+text = "数量"
+
+[node name="InventoryList" type="Tree" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
+layout_mode = 0
+offset_left = 354.0
+offset_top = 103.0
+offset_right = 560.0
+offset_bottom = 215.0
+theme_override_styles/panel = SubResource("table_panel")
+hide_folding = true
+hide_root = true
+column_titles_visible = false
+columns = 3
 
-[node name="MarketPanel" type="VBoxContainer" parent="RootMargin/RootVBox/ContentHBox"]
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="InventoryScrollLine" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 218.0
+offset_right = 538.0
+offset_bottom = 221.0
+color = Color(0.55, 0.55, 0.55, 1)
 
-[node name="MarketTitle" type="Label" parent="RootMargin/RootVBox/ContentHBox/MarketPanel"]
-layout_mode = 2
-text = "黑市行情"
+[node name="BuyCaption" type="Label" parent="."]
+layout_mode = 0
+offset_left = 286.0
+offset_top = 93.0
+offset_right = 322.0
+offset_bottom = 111.0
+theme_override_font_sizes/font_size = 15
+text = "买 进"
 
-[node name="MarketList" type="ItemList" parent="RootMargin/RootVBox/ContentHBox/MarketPanel"]
+[node name="BuyButton" type="Button" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
+layout_mode = 0
+offset_left = 271.0
+offset_top = 113.0
+offset_right = 329.0
+offset_bottom = 137.0
+theme_override_font_sizes/font_size = 16
+text = "=>"
 
-[node name="InventoryPanel" type="VBoxContainer" parent="RootMargin/RootVBox/ContentHBox"]
-layout_mode = 2
-size_flags_horizontal = 4
+[node name="SellCaption" type="Label" parent="."]
+layout_mode = 0
+offset_left = 286.0
+offset_top = 159.0
+offset_right = 322.0
+offset_bottom = 177.0
+theme_override_font_sizes/font_size = 15
+text = "卖 出"
 
-[node name="InventoryTitle" type="Label" parent="RootMargin/RootVBox/ContentHBox/InventoryPanel"]
-layout_mode = 2
-text = "我的货物"
-
-[node name="InventoryList" type="ItemList" parent="RootMargin/RootVBox/ContentHBox/InventoryPanel"]
+[node name="SellButton" type="Button" parent="."]
 unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
+layout_mode = 0
+offset_left = 271.0
+offset_top = 178.0
+offset_right = 329.0
+offset_bottom = 202.0
+theme_override_font_sizes/font_size = 16
+text = "<="
 
-[node name="ActionHBox" type="HBoxContainer" parent="RootMargin/RootVBox"]
-layout_mode = 2
-theme_override_constants/separation = 8
+[node name="StatusPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 244.0
+offset_right = 242.0
+offset_bottom = 431.0
+theme_override_styles/panel = SubResource("outer_panel")
 
-[node name="BuyButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
-layout_mode = 2
-text = "买入"
+[node name="StatusLabel" type="Label" parent="StatusPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 8.0
+offset_top = -11.0
+offset_right = 74.0
+offset_bottom = 8.0
+theme_override_font_sizes/font_size = 14
+text = "您的状态"
 
-[node name="SellButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
-layout_mode = 2
-text = "卖出"
+[node name="CashName" type="Label" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 29.0
+offset_right = 54.0
+offset_bottom = 47.0
+theme_override_font_sizes/font_size = 15
+text = "现  金"
 
-[node name="BankButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
-layout_mode = 2
-text = "银行"
+[node name="CashScreen" type="Panel" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 18.0
+offset_right = 214.0
+offset_bottom = 48.0
+theme_override_styles/panel = SubResource("screen_panel")
 
-[node name="HospitalButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
-layout_mode = 2
-text = "医院"
+[node name="CashValue" type="Control" parent="StatusPanel/CashScreen"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 5.0
+offset_top = 2.0
+offset_right = -5.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "2000"
 
-[node name="PostButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
-layout_mode = 2
-text = "邮局"
+[node name="BankName" type="Label" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 74.0
+offset_right = 54.0
+offset_bottom = 92.0
+theme_override_font_sizes/font_size = 15
+text = "存款:"
 
-[node name="HouseButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
-layout_mode = 2
+[node name="BankScreen" type="Panel" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 64.0
+offset_right = 214.0
+offset_bottom = 94.0
+theme_override_styles/panel = SubResource("screen_panel")
+
+[node name="BankValue" type="Control" parent="StatusPanel/BankScreen"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 5.0
+offset_top = 2.0
+offset_right = -5.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "0"
+
+[node name="DebtName" type="Label" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 119.0
+offset_right = 54.0
+offset_bottom = 137.0
+theme_override_font_sizes/font_size = 15
+text = "欠  债"
+
+[node name="DebtScreen" type="Panel" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 109.0
+offset_right = 214.0
+offset_bottom = 139.0
+theme_override_styles/panel = SubResource("screen_panel")
+
+[node name="DebtValue" type="Control" parent="StatusPanel/DebtScreen"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 5.0
+offset_top = 2.0
+offset_right = -5.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "5500"
+segment_color = Color(1, 0, 0, 1)
+off_color = Color(0.22, 0, 0, 1)
+
+[node name="HealthName" type="Label" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 160.0
+offset_right = 54.0
+offset_bottom = 178.0
+theme_override_font_sizes/font_size = 15
+text = "健康:"
+
+[node name="HealthScreen" type="Panel" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 151.0
+offset_right = 120.0
+offset_bottom = 181.0
+theme_override_styles/panel = SubResource("screen_panel")
+
+[node name="HealthValue" type="Control" parent="StatusPanel/HealthScreen"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 3.0
+offset_top = 2.0
+offset_right = -3.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "100"
+
+[node name="FameName" type="Label" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 132.0
+offset_top = 160.0
+offset_right = 174.0
+offset_bottom = 178.0
+theme_override_font_sizes/font_size = 15
+text = "名声:"
+
+[node name="FameScreen" type="Panel" parent="StatusPanel"]
+layout_mode = 0
+offset_left = 164.0
+offset_top = 151.0
+offset_right = 214.0
+offset_bottom = 181.0
+theme_override_styles/panel = SubResource("screen_panel")
+
+[node name="FameValue" type="Control" parent="StatusPanel/FameScreen"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 3.0
+offset_top = 2.0
+offset_right = -3.0
+offset_bottom = -2.0
+script = ExtResource("2_digital_number")
+value = "100"
+
+[node name="LocationPanel" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 253.0
+offset_top = 244.0
+offset_right = 578.0
+offset_bottom = 431.0
+theme_override_styles/panel = SubResource("outer_panel")
+
+[node name="MapTitle" type="Label" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 9.0
+offset_top = -11.0
+offset_right = 122.0
+offset_bottom = 8.0
+theme_override_font_sizes/font_size = 14
+text = "北京市地铁示意图"
+
+[node name="MapSlogan" type="Label" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 31.0
+offset_right = 128.0
+offset_bottom = 49.0
+theme_override_font_sizes/font_size = 15
+text = "我要逛京城"
+
+[node name="BossLabel" type="Label" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 44.0
+offset_top = 164.0
+offset_right = 120.0
+offset_bottom = 182.0
+theme_override_font_sizes/font_size = 14
+text = "老板来了"
+
+[node name="SubwayLine" type="ColorRect" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 211.0
+offset_top = 103.0
+offset_right = 284.0
+offset_bottom = 116.0
+color = Color(0.04, 0.08, 1, 1)
+
+[node name="SubwayDot1" type="ColorRect" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 217.0
+offset_top = 107.0
+offset_right = 225.0
+offset_bottom = 115.0
+color = Color(1, 1, 1, 1)
+
+[node name="SubwayDot2" type="ColorRect" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 236.0
+offset_top = 107.0
+offset_right = 244.0
+offset_bottom = 115.0
+color = Color(1, 1, 1, 1)
+
+[node name="SubwayDot3" type="ColorRect" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 255.0
+offset_top = 107.0
+offset_right = 263.0
+offset_bottom = 115.0
+color = Color(1, 1, 1, 1)
+
+[node name="SubwayDot4" type="ColorRect" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 274.0
+offset_top = 107.0
+offset_right = 282.0
+offset_bottom = 115.0
+color = Color(1, 1, 1, 1)
+
+[node name="LocationGrid" type="Control" parent="LocationPanel"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 325.0
+offset_bottom = 187.0
+
+[node name="LocationList" type="ItemList" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 253.0
+offset_top = 244.0
+offset_right = 578.0
+offset_bottom = 431.0
+
+[node name="BankButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 445.0
+offset_right = 121.0
+offset_bottom = 485.0
+theme_override_styles/normal = SubResource("button_panel")
+theme_override_font_sizes/font_size = 15
+text = "银  行"
+icon = ExtResource("3_bank")
+
+[node name="HospitalButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 139.0
+offset_top = 445.0
+offset_right = 236.0
+offset_bottom = 485.0
+theme_override_styles/normal = SubResource("button_panel")
+theme_override_font_sizes/font_size = 15
+text = "医  院"
+icon = ExtResource("4_hospital")
+
+[node name="PostButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 254.0
+offset_top = 445.0
+offset_right = 351.0
+offset_bottom = 485.0
+theme_override_styles/normal = SubResource("button_panel")
+theme_override_font_sizes/font_size = 15
+text = "邮  局"
+icon = ExtResource("5_post")
+
+[node name="HouseButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 369.0
+offset_top = 445.0
+offset_right = 482.0
+offset_bottom = 485.0
+theme_override_styles/normal = SubResource("button_panel")
+theme_override_font_sizes/font_size = 15
 text = "租房中介"
+icon = ExtResource("6_house")
 
-[node name="MessageLabel" type="Label" parent="RootMargin/RootVBox"]
+[node name="WangbaButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 445.0
+offset_right = 578.0
+offset_bottom = 485.0
+theme_override_styles/normal = SubResource("button_panel")
+theme_override_font_sizes/font_size = 15
+text = "网  吧"
+icon = ExtResource("7_wangba")
+
+[node name="TickerBar" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 489.0
+offset_right = 598.0
+offset_bottom = 526.0
+color = Color(0.03, 0.08, 0.9, 1)
+
+[node name="MessageLabel" type="Label" parent="TickerBar"]
 unique_name_in_owner = true
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+offset_left = 6.0
+offset_top = 3.0
+offset_right = -6.0
+offset_bottom = -3.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
 text = ""
+vertical_alignment = 1
 autowrap_mode = 3
