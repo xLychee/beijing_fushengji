@@ -111,6 +111,8 @@ func _test_city_toggle_and_finish_game() -> void:
 
 func _test_settings_rules() -> void:
 	GameRules.new_game()
+	GameState.sound_enabled = true
+	GameState.hacker_events_enabled = false
 	var sound_result = GameRules.toggle_sound()
 	_require(sound_result["ok"] == true, "sound toggle should succeed")
 	_require(GameState.sound_enabled == false, "sound toggle should flip sound setting")
