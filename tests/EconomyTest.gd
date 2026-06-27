@@ -29,6 +29,7 @@ func _ready() -> void:
 
 func _test_travel_advances_day_and_applies_interest() -> void:
 	GameRules.new_game()
+	GameState.random_events_enabled = false
 	var old_prices := GameState.market_prices.duplicate()
 	var result = GameRules.travel_to("jianguomen")
 	_require(result["ok"] == true, "travel should succeed")

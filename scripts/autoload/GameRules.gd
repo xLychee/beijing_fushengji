@@ -1,6 +1,9 @@
 extends Node
 
 const GOODS_PATH := "res://data/goods.json"
+const COMMERCIAL_EVENTS_PATH := "res://data/commercial_events.json"
+const HEALTH_EVENTS_PATH := "res://data/health_events.json"
+const MONEY_EVENTS_PATH := "res://data/money_events.json"
 const HEAL_COST_PER_POINT := 35
 const HOUSE_RENT_COST := 500
 const HOUSE_CAPACITY_GAIN := 10
@@ -9,11 +12,23 @@ const INTERNET_CAFE_MAX_VISITS := 3
 
 func new_game() -> Dictionary:
 	GameState.reset()
+	var settings := SaveManager.load_settings()
+	GameState.sound_enabled = bool(settings.get("sound_enabled", true))
+	GameState.hacker_events_enabled = bool(settings.get("hacker_events_enabled", false))
 	GameState.market_prices = generate_market_prices(3)
 	return _result([{"type": "diary", "text": "俺来到了北京。发财是唯一的目标。"}])
 
 func load_goods() -> Array:
 	return _load_json_array(GOODS_PATH)
+
+func load_commercial_events() -> Array:
+	return _load_json_array(COMMERCIAL_EVENTS_PATH)
+
+func load_health_events() -> Array:
+	return _load_json_array(HEALTH_EVENTS_PATH)
+
+func load_money_events() -> Array:
+	return _load_json_array(MONEY_EVENTS_PATH)
 
 func generate_market_prices(leaveout: int) -> Dictionary:
 	var goods := load_goods()
@@ -51,15 +66,136 @@ func travel_to(location_id: String) -> Dictionary:
 	var leaveout := 0 if GameState.time_left <= 2 else 3
 	GameState.market_prices = generate_market_prices(leaveout)
 	apply_cash_and_debt_interest()
+	var messages: Array = [{"type": "diary", "text": "俺换了个地方，黑市行情又变了。"}]
+	var event_result := apply_travel_events()
+	messages.append_array(event_result.get("messages", []))
+	if GameState.game_over:
+		return {
+			"ok": true,
+			"messages": messages,
+			"state_changed": true,
+			"game_over": true,
+		}
 	GameState.time_left = max(GameState.time_left - 1, 0)
 	GameState.day = GameState.MAX_DAYS - GameState.time_left
 	if GameState.time_left == 0:
 		GameState.game_over = true
-	return _result([{"type": "diary", "text": "俺换了个地方，黑市行情又变了。"}])
+	return _result(messages)
 
 func apply_cash_and_debt_interest() -> void:
 	GameState.debt += int(GameState.debt * 0.10)
 	GameState.bank += int(GameState.bank * 0.01)
+
+func apply_travel_events(event_plan: Dictionary = {}) -> Dictionary:
+	var messages: Array = []
+	if event_plan.has("commercial"):
+		for event in _normalize_event_list(event_plan["commercial"]):
+			messages.append_array(apply_commercial_event(event).get("messages", []))
+	elif GameState.random_events_enabled:
+		for event in load_commercial_events():
+			if _event_triggers(event, 950):
+				messages.append_array(apply_commercial_event(event).get("messages", []))
+
+	if event_plan.has("health"):
+		messages.append_array(apply_health_event(event_plan["health"]).get("messages", []))
+	elif GameState.random_events_enabled:
+		for event in load_health_events():
+			if _event_triggers(event, 1000):
+				messages.append_array(apply_health_event(event).get("messages", []))
+				break
+
+	if event_plan.has("money"):
+		messages.append_array(apply_money_event(event_plan["money"]).get("messages", []))
+	elif GameState.random_events_enabled:
+		for event in load_money_events():
+			if _event_triggers(event, 1000):
+				messages.append_array(apply_money_event(event).get("messages", []))
+				break
+		if randi_range(0, 999) % 25 == 0:
+			messages.append_array(apply_hacker_event().get("messages", []))
+
+	if GameState.debt > 100000:
+		GameState.health = max(GameState.health - 30, 0)
+		messages.append({"type": "diary", "text": "俺欠钱太多，村长带一群人打了俺一顿!", "sound": "kill.wav"})
+		if GameState.health <= 0:
+			GameState.game_over = true
+	return _result(messages)
+
+func apply_commercial_event(event: Dictionary) -> Dictionary:
+	var messages: Array = []
+	var goods_id := String(event.get("goods_id", ""))
+	if goods_id != "" and not GameState.market_prices.has(goods_id):
+		return _empty_result()
+	if String(event.get("message", "")) != "":
+		messages.append({"type": "news", "text": String(event["message"])})
+	if goods_id != "":
+		var price := int(GameState.market_prices[goods_id])
+		var multiplier := int(event.get("price_multiplier", 0))
+		var divisor := int(event.get("price_divisor", 0))
+		if multiplier > 0:
+			price *= multiplier
+		if divisor > 0:
+			price = max(int(price / divisor), 1)
+		GameState.market_prices[goods_id] = price
+		var grant_count := int(event.get("grant_count", 0))
+		if grant_count > 0:
+			var added_count := _grant_goods(goods_id, grant_count)
+			if added_count < grant_count:
+				messages.append({"type": "diary", "text": "可惜!俺的房子太小，只能放%d个物品。" % GameState.capacity})
+	var debt_delta := int(event.get("debt_delta", 0))
+	if debt_delta != 0:
+		GameState.debt = max(GameState.debt + debt_delta, 0)
+	return _result(messages)
+
+func apply_health_event(event: Dictionary) -> Dictionary:
+	var damage := int(event.get("damage", 0))
+	if damage <= 0:
+		return _empty_result()
+	GameState.health = max(GameState.health - damage, 0)
+	var message := "%s俺的健康减少了%d点。" % [String(event.get("message", "")), damage]
+	var result_message := {"type": "diary", "text": message}
+	if event.has("sound"):
+		result_message["sound"] = String(event["sound"])
+	var messages: Array = [result_message]
+	if GameState.health <= 0:
+		GameState.game_over = true
+		messages.append({"type": "diary", "text": "俺倒在街头，日记本上写着：“北京需要俺健康地活着!”", "sound": "death.wav"})
+	return _result(messages)
+
+func apply_money_event(event: Dictionary) -> Dictionary:
+	var ratio := int(event.get("loss_ratio", 0))
+	if ratio <= 0:
+		return _empty_result()
+	var target := String(event.get("target", "cash"))
+	var messages: Array = []
+	if target == "bank":
+		if GameState.bank <= 0:
+			return _empty_result()
+		GameState.bank = max(int(GameState.bank / 100) * (100 - ratio), 0)
+		messages.append({"type": "diary", "text": "%s俺的存款减少了%d%%，哎呀!" % [String(event.get("message", "")), ratio]})
+	else:
+		GameState.cash = max(int(GameState.cash / 100) * (100 - ratio), 0)
+		messages.append({"type": "diary", "text": "%s俺的银子减少了%d%%。" % [String(event.get("message", "")), ratio]})
+	return _result(messages)
+
+func apply_hacker_event(event: Dictionary = {}) -> Dictionary:
+	if not GameState.hacker_events_enabled or GameState.bank < 1000:
+		return _empty_result(false)
+	var delta := int(event.get("delta", 0))
+	if delta == 0:
+		if GameState.bank > 100000:
+			var amount := int(GameState.bank / (2 + randi_range(0, 19)))
+			delta = -amount if randi_range(0, 19) % 3 != 0 else amount
+		else:
+			delta = int(GameState.bank / (1 + randi_range(0, 14)))
+	if delta == 0:
+		return _empty_result(false)
+	GameState.bank = max(GameState.bank + delta, 0)
+	var verb := "增加" if delta > 0 else "减少"
+	return _result([{
+		"type": "diary",
+		"text": "黑客入侵银行网络，疯狂修改数据库，俺的存款%s了%d。" % [verb, abs(delta)]
+	}])
 
 func buy(goods_id: String, count: int) -> Dictionary:
 	if count <= 0:
@@ -110,11 +246,13 @@ func sell(goods_id: String, count: int) -> Dictionary:
 
 func toggle_sound() -> Dictionary:
 	GameState.sound_enabled = not GameState.sound_enabled
+	_save_current_settings()
 	var label := "打开" if GameState.sound_enabled else "关闭"
 	return _result([{"type": "diary", "text": "声音已经%s。" % label}])
 
 func toggle_hacker_events() -> Dictionary:
 	GameState.hacker_events_enabled = not GameState.hacker_events_enabled
+	_save_current_settings()
 	var label := "打开" if GameState.hacker_events_enabled else "关闭"
 	return _result([{"type": "diary", "text": "黑客事件已经%s。" % label}])
 
@@ -194,12 +332,13 @@ func finish_game() -> Dictionary:
 	GameState.inventory = {}
 	GameState.game_over = true
 	var high_scores := SaveManager.record_high_score(
-		SaveManager.default_high_scores(),
+		SaveManager.load_high_scores(),
 		"玩家",
 		GameState.score(),
 		GameState.health,
 		_fame_label()
 	)
+	SaveManager.save_high_scores(high_scores)
 	return {
 		"ok": true,
 		"messages": [{"type": "diary", "text": "北京浮生结束了，最后得分%d。" % GameState.score()}],
@@ -228,6 +367,14 @@ func _result(messages: Array) -> Dictionary:
 		"game_over": GameState.game_over
 	}
 
+func _empty_result(ok := true) -> Dictionary:
+	return {
+		"ok": ok,
+		"messages": [],
+		"state_changed": false,
+		"game_over": GameState.game_over
+	}
+
 func _failure(message: String) -> Dictionary:
 	return {
 		"ok": false,
@@ -247,6 +394,39 @@ func _goods_fame_penalty(goods_id: String) -> int:
 		if String(item["id"]) == goods_id:
 			return int(item.get("fame_penalty_on_sale", 0))
 	return 0
+
+func _grant_goods(goods_id: String, count: int) -> int:
+	var available_space: int = max(GameState.capacity - GameState.inventory_total(), 0)
+	var add_count: int = min(count, available_space)
+	if add_count <= 0:
+		return 0
+	var item = GameState.inventory.get(goods_id, {"quantity": 0, "average_price": 0})
+	var old_quantity := int(item.get("quantity", 0))
+	var average_price := int(item.get("average_price", 0))
+	GameState.inventory[goods_id] = {
+		"quantity": old_quantity + add_count,
+		"average_price": average_price,
+	}
+	return add_count
+
+func _event_triggers(event: Dictionary, upper: int) -> bool:
+	var frequency := int(event.get("frequency", 0))
+	if frequency <= 0:
+		return false
+	return randi_range(0, upper - 1) % frequency == 0
+
+func _normalize_event_list(value) -> Array:
+	if typeof(value) == TYPE_ARRAY:
+		return value
+	if typeof(value) == TYPE_DICTIONARY:
+		return [value]
+	return []
+
+func _save_current_settings() -> void:
+	SaveManager.save_settings({
+		"sound_enabled": GameState.sound_enabled,
+		"hacker_events_enabled": GameState.hacker_events_enabled,
+	})
 
 func _fame_label() -> String:
 	if GameState.fame >= 90:

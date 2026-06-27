@@ -21,6 +21,18 @@ func _ready() -> void:
 	await get_tree().process_frame
 	_require(GameState.city == "alternate", "city toggle button should switch city")
 
+	main.get_node("SettingsButton").pressed.emit()
+	await get_tree().process_frame
+	var settings_dialog = main.get_node("SettingsDialog")
+	_require(settings_dialog.visible == true, "settings button should open settings dialog")
+	_require(main.get_node("SettingsDialog/SettingsPanel/SoundCheck").button_pressed == GameState.sound_enabled, "settings dialog should reflect sound setting")
+
+	main.get_node("HighScoresButton").pressed.emit()
+	await get_tree().process_frame
+	var high_scores_dialog = main.get_node("HighScoresDialog")
+	_require(high_scores_dialog.visible == true, "high scores button should open high scores dialog")
+	_require(String(high_scores_dialog.dialog_text).contains("赖皮张"), "high scores dialog should show default scores")
+
 	if failed:
 		return
 	print("UI action test passed")
