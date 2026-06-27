@@ -1,0 +1,117 @@
+[gd_scene load_steps=2 format=3 uid="uid://beijing_fushengji_main"]
+
+[ext_resource type="Script" path="res://scripts/ui/MainController.gd" id="1_main_controller"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main_controller")
+
+[node name="RootMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
+
+[node name="RootVBox" type="VBoxContainer" parent="RootMargin"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="RootMargin/RootVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "北京浮生记"
+horizontal_alignment = 1
+
+[node name="StatusLabel" type="Label" parent="RootMargin/RootVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "状态"
+
+[node name="ContentHBox" type="HBoxContainer" parent="RootMargin/RootVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="LocationPanel" type="VBoxContainer" parent="RootMargin/RootVBox/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LocationTitle" type="Label" parent="RootMargin/RootVBox/ContentHBox/LocationPanel"]
+layout_mode = 2
+text = "地点"
+
+[node name="LocationList" type="ItemList" parent="RootMargin/RootVBox/ContentHBox/LocationPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarketPanel" type="VBoxContainer" parent="RootMargin/RootVBox/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MarketTitle" type="Label" parent="RootMargin/RootVBox/ContentHBox/MarketPanel"]
+layout_mode = 2
+text = "黑市行情"
+
+[node name="MarketList" type="ItemList" parent="RootMargin/RootVBox/ContentHBox/MarketPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="InventoryPanel" type="VBoxContainer" parent="RootMargin/RootVBox/ContentHBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="InventoryTitle" type="Label" parent="RootMargin/RootVBox/ContentHBox/InventoryPanel"]
+layout_mode = 2
+text = "我的货物"
+
+[node name="InventoryList" type="ItemList" parent="RootMargin/RootVBox/ContentHBox/InventoryPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ActionHBox" type="HBoxContainer" parent="RootMargin/RootVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BuyButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
+layout_mode = 2
+text = "买入"
+
+[node name="SellButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
+layout_mode = 2
+text = "卖出"
+
+[node name="BankButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
+layout_mode = 2
+text = "银行"
+
+[node name="HospitalButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
+layout_mode = 2
+text = "医院"
+
+[node name="PostButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
+layout_mode = 2
+text = "邮局"
+
+[node name="HouseButton" type="Button" parent="RootMargin/RootVBox/ActionHBox"]
+layout_mode = 2
+text = "租房中介"
+
+[node name="MessageLabel" type="Label" parent="RootMargin/RootVBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = ""
+autowrap_mode = 3

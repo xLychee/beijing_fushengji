@@ -1,0 +1,26 @@
+{
+  "beijing": [
+    {"id": "jianguomen", "label": "建国门"},
+    {"id": "beijing_station", "label": "北京站"},
+    {"id": "xizhimen", "label": "西直门"},
+    {"id": "chongwenmen", "label": "崇文门"},
+    {"id": "dongzhimen", "label": "东直门"},
+    {"id": "fuxingmen", "label": "复兴门"},
+    {"id": "jishuitan", "label": "积水潭"},
+    {"id": "changchunjie", "label": "长椿街"},
+    {"id": "gongzhufen", "label": "公主坟"},
+    {"id": "pingguoyuan", "label": "苹果园"}
+  ],
+  "alternate": [
+    {"id": "yonganli", "label": "永安里"},
+    {"id": "fangzhuang", "label": "方 庄"},
+    {"id": "haidian_street", "label": "海淀大街"},
+    {"id": "yongdingmen", "label": "永定门"},
+    {"id": "sanyuan_west_bridge", "label": "三元西桥"},
+    {"id": "fuyou_street", "label": "府右街"},
+    {"id": "asian_games_village", "label": "亚运村"},
+    {"id": "yuquanying", "label": "玉泉营"},
+    {"id": "cuiwei_road", "label": "翠微路"},
+    {"id": "bajiao_west_road", "label": "八角西路"}
+  ]
+}
