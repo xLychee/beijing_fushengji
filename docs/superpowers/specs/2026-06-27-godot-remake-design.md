@@ -83,44 +83,45 @@ Reasons:
 ## Project Layout
 
 ```text
-godot/
-  project.godot
-  scenes/
-    Main.tscn
-    dialogs/
-      MessageDialog.tscn
-      TradeDialog.tscn
-      BankDialog.tscn
-      HospitalDialog.tscn
-      DebtDialog.tscn
-      HouseDialog.tscn
-      HighScoresDialog.tscn
-      SettingsDialog.tscn
-  scripts/
-    autoload/
-      GameState.gd
-      GameRules.gd
-      DialogManager.gd
-      SaveManager.gd
-      AudioManager.gd
-    ui/
-      MainController.gd
-      MarketTable.gd
-      InventoryTable.gd
-  data/
-    goods.json
-    locations.json
-    commercial_events.json
-    health_events.json
-    money_events.json
-    tips.json
-    text.json
-  assets/
-    audio/
-    images/
+project.godot
+scenes/
+  Main.tscn
+  dialogs/
+    MessageDialog.tscn
+    TradeDialog.tscn
+    BankDialog.tscn
+    HospitalDialog.tscn
+    DebtDialog.tscn
+    HouseDialog.tscn
+    HighScoresDialog.tscn
+    SettingsDialog.tscn
+scripts/
+  autoload/
+    GameState.gd
+    GameRules.gd
+    DialogManager.gd
+    SaveManager.gd
+    AudioManager.gd
+  ui/
+    MainController.gd
+    MarketTable.gd
+    InventoryTable.gd
+data/
+  goods.json
+  locations.json
+  commercial_events.json
+  health_events.json
+  money_events.json
+  tips.json
+  text.json
+assets/
+  audio/
+  images/
+reference/
+  original-vc6/
 ```
 
-The original source and assets stay at the repository root. The Godot remake lives in `godot/` so the old code remains available for reference.
+The repository root is the Godot project. The original VC6/MFC source and bundled assets live under `reference/original-vc6/` so they remain available for research without defining the new project shape.
 
 ## Game State
 
@@ -288,9 +289,9 @@ The old `score.txt` format does not need to be reused internally. A one-time imp
 
 ## Audio And Assets
 
-Copy original WAV files into `godot/assets/audio/`.
+Copy original WAV files into `assets/audio/`.
 
-Image assets can be copied into `godot/assets/images/`. BMP files should be converted to PNG during migration so Godot imports them cleanly and the repo remains easier to work with.
+Image assets can be copied into `assets/images/`. BMP files should be converted to PNG during migration so Godot imports them cleanly and the repo remains easier to work with.
 
 The first full version should use audio cues for:
 
@@ -334,7 +335,7 @@ Manual playtest checklist:
 
 ### Milestone 1: Godot Skeleton
 
-- Create `godot/` project.
+- Create `` project.
 - Add main scene.
 - Add autoload singletons.
 - Add starter data files with migrated examples.

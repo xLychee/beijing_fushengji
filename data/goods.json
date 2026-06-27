@@ -1,0 +1,10 @@
+[
+  {"id": "imported_cigarettes", "name": "进口香烟", "base_price": 100, "random_range": 350, "fame_penalty_on_sale": 0},
+  {"id": "smuggled_cars", "name": "走私汽车", "base_price": 15000, "random_range": 15000, "fame_penalty_on_sale": 0},
+  {"id": "pirated_vcd_games", "name": "盗版VCD、游戏", "base_price": 5, "random_range": 50, "fame_penalty_on_sale": 0},
+  {"id": "fake_liquor", "name": "假白酒（剧毒！）", "base_price": 1000, "random_range": 2500, "fame_penalty_on_sale": 10},
+  {"id": "shanghai_baby", "name": "《上海小宝贝》（禁书）", "base_price": 5000, "random_range": 9000, "fame_penalty_on_sale": 7},
+  {"id": "imported_toys", "name": "进口玩具", "base_price": 250, "random_range": 600, "fame_penalty_on_sale": 0},
+  {"id": "gray_market_phones", "name": "水货手机", "base_price": 750, "random_range": 750, "fame_penalty_on_sale": 0},
+  {"id": "shoddy_cosmetics", "name": "伪劣化妆品", "base_price": 65, "random_range": 180, "fame_penalty_on_sale": 0}
+]
