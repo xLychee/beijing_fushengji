@@ -4,10 +4,11 @@ const GOODS_PATH := "res://data/goods.json"
 const COMMERCIAL_EVENTS_PATH := "res://data/commercial_events.json"
 const HEALTH_EVENTS_PATH := "res://data/health_events.json"
 const MONEY_EVENTS_PATH := "res://data/money_events.json"
-const HEAL_COST_PER_POINT := 35
-const HOUSE_RENT_COST := 500
+const HEAL_COST_PER_POINT := 3500
+const HOUSE_MIN_CASH := 30000
+const HOUSE_MAX_CAPACITY := 140
 const HOUSE_CAPACITY_GAIN := 10
-const INTERNET_CAFE_REWARD := 50
+const INTERNET_CAFE_MIN_CASH := 15
 const INTERNET_CAFE_MAX_VISITS := 3
 
 func new_game() -> Dictionary:
@@ -300,18 +301,27 @@ func heal(points: int) -> Dictionary:
 	return _result([{"type": "diary", "text": "花了%d元，健康恢复到%d。" % [cost, GameState.health]}])
 
 func rent_larger_house() -> Dictionary:
-	if GameState.cash < HOUSE_RENT_COST:
-		return _failure("俺的现金不够租更大的房子。")
-	GameState.cash -= HOUSE_RENT_COST
+	if GameState.capacity >= HOUSE_MAX_CAPACITY:
+		return _failure("中介说，俺的房子比局长的还大。")
+	if GameState.cash < HOUSE_MIN_CASH:
+		return _failure("中介说，俺没有三万现金就想租房？")
+	if GameState.cash <= HOUSE_MIN_CASH:
+		GameState.cash -= 25000
+	else:
+		GameState.cash = int(GameState.cash / 2) - 2000
 	GameState.capacity += HOUSE_CAPACITY_GAIN
-	return _result([{"type": "diary", "text": "租到了更大的房子，能放%d个物品了。" % GameState.capacity}])
+	return _result([{"type": "diary", "text": "俺的房子可以放%d个物品了，可是好像中介公司骗了俺一些钱。" % GameState.capacity}])
 
-func visit_internet_cafe() -> Dictionary:
+func visit_internet_cafe(forced_reward := -1) -> Dictionary:
 	if GameState.wangba_visits >= INTERNET_CAFE_MAX_VISITS:
-		return _failure("网吧老板说俺今天来得太勤了。")
+		return _failure("村长放出话来：别总是在网吧里鬼混，快去做正经买卖！")
+	if GameState.cash < INTERNET_CAFE_MIN_CASH:
+		return _failure("进网吧至少身上要带15元，呵呵，取钱再来。")
 	GameState.wangba_visits += 1
-	GameState.cash += INTERNET_CAFE_REWARD
-	return _result([{"type": "diary", "text": "在网吧接了点小活，赚了%d元。" % INTERNET_CAFE_REWARD}])
+	var reward: int = forced_reward if forced_reward > 0 else randi_range(1, 10)
+	reward = clamp(reward, 1, 10)
+	GameState.cash += reward
+	return _result([{"type": "diary", "text": "感谢电信改革，可以免费上网！还挣了美国网络广告费%d元，嘿嘿！" % reward}])
 
 func toggle_city_mode() -> Dictionary:
 	GameState.city = "alternate" if GameState.city == "beijing" else "beijing"
@@ -336,7 +346,7 @@ func finish_game() -> Dictionary:
 		"玩家",
 		GameState.score(),
 		GameState.health,
-		_fame_label()
+		fame_label_for_score(GameState.fame)
 	)
 	SaveManager.save_high_scores(high_scores)
 	return {
@@ -428,11 +438,19 @@ func _save_current_settings() -> void:
 		"hacker_events_enabled": GameState.hacker_events_enabled,
 	})
 
-func _fame_label() -> String:
-	if GameState.fame >= 90:
+func fame_label_for_score(fame: int) -> String:
+	if fame >= 100:
+		return "德高望重"
+	if fame >= 90:
 		return "杰出青年"
-	if GameState.fame >= 70:
-		return "普通群众"
-	if GameState.fame >= 40:
+	if fame >= 80:
+		return "一般般"
+	if fame >= 60:
+		return "不佳"
+	if fame >= 40:
 		return "争议人物"
-	return "臭名昭著"
+	if fame >= 20:
+		return "差"
+	if fame >= 10:
+		return "很差"
+	return "江湖唾弃"

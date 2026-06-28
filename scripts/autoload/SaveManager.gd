@@ -12,7 +12,15 @@ func default_settings() -> Dictionary:
 func default_high_scores() -> Array:
 	return [
 		{"name": "赖皮张", "score": 12500720, "health": 98, "fame": "争议人物"},
-		{"name": "萧峰", "score": 830050, "health": 100, "fame": "杰出青年"}
+		{"name": "萧峰", "score": 830050, "health": 100, "fame": "杰出青年"},
+		{"name": "二黑", "score": 500447, "health": 78, "fame": "德高望重"},
+		{"name": "Andy Rocky", "score": 239403, "health": 97, "fame": "很差"},
+		{"name": "li xing", "score": 34900, "health": 35, "fame": "江湖唾弃"},
+		{"name": "li xing", "score": 13400, "health": 100, "fame": "江湖唾弃"},
+		{"name": "li", "score": 2300, "health": 77, "fame": "不佳"},
+		{"name": "li", "score": 45, "health": 12, "fame": "杰出青年"},
+		{"name": "li", "score": 34, "health": 100, "fame": "一般般"},
+		{"name": "li", "score": 3, "health": 100, "fame": "杰出青年"}
 	]
 
 func load_settings(path: String = SETTINGS_PATH) -> Dictionary:

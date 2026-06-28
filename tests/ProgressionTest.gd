@@ -67,20 +67,23 @@ func _test_bank_and_debt_rules() -> void:
 func _test_hospital_house_and_internet_cafe_rules() -> void:
 	GameRules.new_game()
 	GameState.health = 40
+	GameState.cash = 100000
 	var heal_result = GameRules.heal(25)
 	_require(heal_result["ok"] == true, "heal should succeed")
 	_require(GameState.health == 65, "heal should increase health by points")
-	_require(GameState.cash == 1125, "heal should cost 35 per point")
+	_require(GameState.cash == 12500, "heal should cost 3500 per point")
 
+	GameState.cash = 30000
 	var house_result = GameRules.rent_larger_house()
 	_require(house_result["ok"] == true, "rent larger house should succeed")
 	_require(GameState.capacity == 110, "renting should add storage capacity")
-	_require(GameState.cash == 625, "renting should cost 500")
+	_require(GameState.cash == 5000, "renting should follow original cash threshold cost")
 
-	var wangba_result = GameRules.visit_internet_cafe()
+	GameState.cash = 15
+	var wangba_result = GameRules.visit_internet_cafe(5)
 	_require(wangba_result["ok"] == true, "internet cafe should succeed")
 	_require(GameState.wangba_visits == 1, "internet cafe should count visits")
-	_require(GameState.cash == 675, "internet cafe should add a small reward")
+	_require(GameState.cash == 20, "internet cafe should add the original 1..10 reward")
 
 func _test_city_toggle_and_finish_game() -> void:
 	GameRules.new_game()
