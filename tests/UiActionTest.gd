@@ -10,10 +10,20 @@ func _ready() -> void:
 	var initial_cash := GameState.cash
 	main.get_node("BankButton").pressed.emit()
 	await get_tree().process_frame
+	var bank_dialog = main.get_node("BankDialog")
+	_require(bank_dialog.visible == true, "bank button should open bank dialog")
+	bank_dialog.get_node("AmountSpinBox").value = 500
+	bank_dialog.get_node("OkButton").pressed.emit()
+	await get_tree().process_frame
 	_require(GameState.bank == 500, "bank button should deposit 500")
 	_require(GameState.cash == initial_cash - 500, "bank button should reduce cash")
 
 	main.get_node("PostButton").pressed.emit()
+	await get_tree().process_frame
+	var debt_dialog = main.get_node("DebtDialog")
+	_require(debt_dialog.visible == true, "post button should open debt dialog")
+	debt_dialog.get_node("AmountSpinBox").value = 500
+	debt_dialog.get_node("OkButton").pressed.emit()
 	await get_tree().process_frame
 	_require(GameState.debt == 4500, "post button should repay 500 debt")
 
