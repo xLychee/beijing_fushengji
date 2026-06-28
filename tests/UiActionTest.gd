@@ -6,6 +6,15 @@ func _ready() -> void:
 	var main = preload("res://scenes/Main.tscn").instantiate()
 	add_child(main)
 	await get_tree().process_frame
+	var market_list = main.get_node("MarketList")
+	var inventory_list = main.get_node("InventoryList")
+	_require(market_list.has_theme_stylebox_override("selected"), "market list should have visible selected-row styling")
+	_require(market_list.has_theme_stylebox_override("selected_focus"), "market list should keep selected styling when focused")
+	_require(inventory_list.has_theme_stylebox_override("selected"), "inventory list should have visible selected-row styling")
+	var first_market_row = market_list.get_root().get_first_child()
+	first_market_row.select(0)
+	market_list.item_selected.emit()
+	_require(first_market_row.get_custom_bg_color(0).is_equal_approx(Color(0.02, 0.16, 0.72)), "selected market row should get a clear blue background")
 
 	var initial_cash := GameState.cash
 	main.get_node("BankButton").pressed.emit()

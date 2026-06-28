@@ -23,8 +23,10 @@ AudioManager="*res://scripts/autoload/AudioManager.gd"
 
 window/size/viewport_width=600
 window/size/viewport_height=528
-window/size/window_width_override=600
-window/size/window_height_override=528
+window/size/window_width_override=930
+window/size/window_height_override=818
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [rendering]
 

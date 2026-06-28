@@ -49,6 +49,7 @@ var tips: Array = []
 var tip_index := 0
 var pending_buy_goods_id := ""
 var pending_sell_goods_id := ""
+const TREE_SELECTED_BG := Color(0.02, 0.16, 0.72)
 var location_positions := {
 	"xizhimen": Vector2(145, 21),
 	"jishuitan": Vector2(215, 21),
@@ -93,6 +94,12 @@ func _ready() -> void:
 	city_toggle_button.pressed.connect(_on_city_toggle_pressed)
 	message_dialog.confirmed.connect(_on_message_dialog_confirmed)
 	message_dialog.close_requested.connect(_on_message_dialog_confirmed)
+	market_list.item_selected.connect(func() -> void:
+		_apply_tree_row_highlight(market_list)
+	)
+	inventory_list.item_selected.connect(func() -> void:
+		_apply_tree_row_highlight(inventory_list)
+	)
 	sound_check.toggled.connect(_on_sound_check_toggled)
 	hacker_check.toggled.connect(_on_hacker_check_toggled)
 	_render_all()
@@ -148,6 +155,7 @@ func _render_market() -> void:
 		row.set_icon(0, goods_icon)
 		row.set_icon_max_width(0, 16)
 		row.set_metadata(0, goods_id)
+	_apply_tree_row_highlight(market_list)
 
 func _render_inventory() -> void:
 	inventory_list.clear()
@@ -167,6 +175,7 @@ func _render_inventory() -> void:
 		row.set_icon(0, goods_icon)
 		row.set_icon_max_width(0, 16)
 		row.set_metadata(0, goods_id)
+	_apply_tree_row_highlight(inventory_list)
 
 func _render_next_message() -> void:
 	if message_dialog.visible:
@@ -531,6 +540,8 @@ func _configure_tree(tree: Tree, column_widths: Array) -> void:
 	tree.add_theme_color_override("font_color", Color.BLACK)
 	tree.add_theme_color_override("font_selected_color", Color.WHITE)
 	tree.add_theme_color_override("guide_color", Color(0.84, 0.84, 0.84))
+	tree.add_theme_stylebox_override("selected", _make_tree_selection_style(false))
+	tree.add_theme_stylebox_override("selected_focus", _make_tree_selection_style(true))
 	tree.add_theme_constant_override("v_separation", 0)
 
 func _apply_retro_theme(node: Node) -> void:
@@ -568,3 +579,28 @@ func _make_button_style(fill: Color, border: Color) -> StyleBoxFlat:
 	style.corner_radius_bottom_right = 0
 	style.corner_radius_bottom_left = 0
 	return style
+
+func _make_tree_selection_style(focused: bool) -> StyleBoxFlat:
+	var style := StyleBoxFlat.new()
+	style.bg_color = TREE_SELECTED_BG if focused else Color(0.08, 0.22, 0.62)
+	style.corner_radius_top_left = 0
+	style.corner_radius_top_right = 0
+	style.corner_radius_bottom_right = 0
+	style.corner_radius_bottom_left = 0
+	return style
+
+func _apply_tree_row_highlight(tree: Tree) -> void:
+	var selected := tree.get_selected()
+	var root := tree.get_root()
+	if root == null:
+		return
+	var row := root.get_first_child()
+	while row != null:
+		for column in tree.columns:
+			if row == selected:
+				row.set_custom_bg_color(column, TREE_SELECTED_BG)
+				row.set_custom_color(column, Color.WHITE)
+			else:
+				row.clear_custom_bg_color(column)
+				row.clear_custom_color(column)
+		row = row.get_next()

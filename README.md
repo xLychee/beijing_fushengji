@@ -33,7 +33,9 @@ godot --path . --headless --log-file /private/tmp/beijing_fushengji_events.log -
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_saves.log --scene tests/SavePersistenceTest.tscn
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_dialogs.log --scene tests/DialogQueueTest.tscn
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_audio.log --scene tests/AudioManagerTest.tscn
+godot --path . --headless --log-file /private/tmp/beijing_fushengji_window_scale.log --scene tests/WindowScaleTest.tscn
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_ui.log --scene tests/UiActionTest.tscn
+godot --path . --headless --log-file /private/tmp/beijing_fushengji_ui_full_run.log --scene tests/UiFullRunTest.tscn
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_formula.log --scene tests/FormulaCalibrationTest.tscn
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_operation.log --scene tests/OperationDialogTest.tscn
 godot --path . --headless --log-file /private/tmp/beijing_fushengji_content.log --scene tests/ContentSurfaceTest.tscn
