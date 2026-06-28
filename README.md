@@ -12,6 +12,17 @@ The remake currently includes the core trading loop, original-style random event
 godot --path .
 ```
 
+## Export
+
+The project has Godot export presets for macOS and Windows Desktop.
+
+```bash
+godot --path . --headless --export-release "macOS" build/macos/beijing_fushengji_macos.zip
+godot --path . --headless --export-release "Windows Desktop" build/windows/beijing_fushengji.exe
+```
+
+Godot export templates must be installed for Godot `4.7.stable`. The macOS export uses ad-hoc signing by default, so a downloaded build may still be blocked by Gatekeeper unless it is notarized with an Apple developer account.
+
 ## Smoke Test
 
 ```bash
@@ -38,3 +49,7 @@ godot --path . --headless --log-file /private/tmp/beijing_fushengji_full_run.log
 - `assets/audio/`: WAV sound effects migrated from the original game.
 - `tests/`: command-line smoke tests.
 - `reference/original-vc6/`: original Windows/VC6 project kept for research.
+
+## License
+
+This remake is distributed under GPL-2.0 for compatibility with the original project. See `LICENSE` and `NOTICE.md`.
