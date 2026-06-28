@@ -35,13 +35,31 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var settings_dialog = main.get_node("SettingsDialog")
 	_require(settings_dialog.visible == true, "settings button should open settings dialog")
-	_require(main.get_node("SettingsDialog/SettingsPanel/SoundCheck").button_pressed == GameState.sound_enabled, "settings dialog should reflect sound setting")
+	var sound_check = main.get_node("SettingsDialog/SettingsPanel/SoundCheck")
+	_require(sound_check.button_pressed == GameState.sound_enabled, "settings dialog should reflect sound setting")
+	var original_sound_state := GameState.sound_enabled
+	sound_check.button_pressed = not original_sound_state
+	await get_tree().process_frame
+	settings_dialog.hide()
+	main.get_node("SettingsButton").pressed.emit()
+	await get_tree().process_frame
+	_require(sound_check.button_pressed == (not original_sound_state), "settings dialog should reflect saved toggle on reopen")
+	sound_check.button_pressed = original_sound_state
+	await get_tree().process_frame
 
 	main.get_node("HighScoresButton").pressed.emit()
 	await get_tree().process_frame
 	var high_scores_dialog = main.get_node("HighScoresDialog")
 	_require(high_scores_dialog.visible == true, "high scores button should open high scores dialog")
-	_require(String(high_scores_dialog.dialog_text).contains("赖皮张"), "high scores dialog should show default scores")
+	var score_table = high_scores_dialog.get_node_or_null("ScoreTable")
+	_require(score_table != null, "high scores dialog should render a score table")
+	if score_table != null:
+		_require(score_table.columns == 5, "score table should render rank, name, money, health, fame columns")
+		var first_row = score_table.get_root().get_first_child()
+		_require(first_row != null, "score table should render score rows")
+		if first_row != null:
+			_require(first_row.get_text(1) == "赖皮张", "score table should show default top player")
+			_require(first_row.get_text(4) == "争议人物", "score table should show original fame label")
 
 	if failed:
 		return

@@ -34,6 +34,7 @@ var ui_font := SystemFont.new()
 var goods_icon: Texture2D = preload("res://assets/ui/goods.png")
 var amount_dialog_script: Script = preload("res://scripts/ui/AmountDialog.gd")
 var content_dialog_script: Script = preload("res://scripts/ui/ContentDialog.gd")
+var score_table_script: Script = preload("res://scripts/ui/ScoreTable.gd")
 var buy_dialog: Control
 var sell_dialog: Control
 var bank_dialog: Control
@@ -42,6 +43,7 @@ var debt_dialog: Control
 var house_dialog: Control
 var content_dialog: Control
 var boss_dialog: Control
+var score_table
 var content_data := {}
 var tips: Array = []
 var tip_index := 0
@@ -73,6 +75,7 @@ func _ready() -> void:
 		goods_by_id[String(item["id"])] = item
 	_create_operation_dialogs()
 	_create_content_surfaces()
+	_create_score_table()
 	DialogManager.clear()
 	var result := GameRules.new_game()
 	DialogManager.enqueue_messages(result["messages"])
@@ -344,7 +347,8 @@ func _on_settings_pressed() -> void:
 	settings_dialog.popup_centered(Vector2i(280, 150))
 
 func _on_high_scores_pressed() -> void:
-	high_scores_dialog.dialog_text = _format_high_scores(SaveManager.load_high_scores())
+	high_scores_dialog.dialog_text = ""
+	score_table.render_scores(SaveManager.load_high_scores())
 	high_scores_dialog.popup_centered(Vector2i(360, 260))
 
 func _on_tip_pressed() -> void:
@@ -453,6 +457,23 @@ func _create_content_surfaces() -> void:
 	boss_button.pressed.connect(_on_boss_pressed)
 	location_grid.get_parent().add_child(boss_button)
 	_style_retro_button(boss_button)
+
+func _create_score_table() -> void:
+	var body_label := high_scores_dialog.get_node_or_null("BodyLabel") as Label
+	if body_label != null:
+		body_label.visible = false
+	score_table = score_table_script.new()
+	score_table.name = "ScoreTable"
+	score_table.position = Vector2(12, 40)
+	score_table.size = Vector2(336, 170)
+	high_scores_dialog.add_child(score_table)
+	score_table.add_theme_font_override("font", ui_font)
+	score_table.add_theme_font_size_override("font_size", 12)
+	score_table.add_theme_color_override("font_color", Color.BLACK)
+	score_table.add_theme_color_override("font_selected_color", Color.WHITE)
+	score_table.add_theme_color_override("title_button_color", Color(0.91, 0.91, 0.91))
+	score_table.add_theme_color_override("guide_color", Color(0.78, 0.78, 0.78))
+	score_table.add_theme_constant_override("v_separation", 0)
 
 func _create_content_dialog(dialog_name: String) -> Control:
 	var dialog = content_dialog_script.new()
